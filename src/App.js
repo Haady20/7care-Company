@@ -7,9 +7,10 @@ function App() {
     <Routes>
       <Route path="/" element={<AdminPage />} />
 
-      {/* http://localhost:3000/client/1 */}
-      
-      <Route path="/client/:id" element={<ClientPage />} />
+      {/* The :qrToken will come from the QR code URL, e.g.
+          http://localhost:5173/client/b2b3456faebb8244
+      */}
+      <Route path="/client/:qrToken" element={<ClientPage />} />
     </Routes>
   );
 }

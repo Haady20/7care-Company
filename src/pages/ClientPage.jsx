@@ -1,16 +1,48 @@
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { fetchClientByQrToken } from "../api/clientApi";
 
 function ClientPage() {
-  const { id } = useParams();
+  const { qrToken } = useParams();
+  const [client, setClient] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const client = {
-    firstName: "Ahmed",
-    lastName: "Ali",
-    nationalId: "12345678901234",
-    job: "Doctor",
-    address: "Nasr City, Cairo",
-    image: "https://via.placeholder.com/150",
-  };
+  useEffect(() => {
+    async function load() {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await fetchClientByQrToken(qrToken);
+        // backend returns: { client, profileUrl }
+        setClient(data.client);
+      } catch (err) {
+        console.error(err);
+        setError(err.message || "Failed to load client");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (qrToken) {
+      load();
+    }
+  }, [qrToken]);
+
+  if (loading) {
+    return <div className="container mt-5">Loading client...</div>;
+  }
+
+  if (error || !client) {
+    return (
+      <div className="container mt-5">
+        <h2>Client not found</h2>
+        {error && <p>{error}</p>}
+      </div>
+    );
+  }
+
+  const fullName = `${client.firstName || ""} ${client.lastName || ""}`.trim();
 
   return (
     <div>
