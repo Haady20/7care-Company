@@ -71,10 +71,22 @@ export async function fetchClientById(id) {
 }
 
 export async function createClient(payload) {
+  const fd = new FormData();
+
+  // Append primitives
+  for (const [k, v] of Object.entries(payload)) {
+    if (v === undefined || v === null) continue;
+    // If it's a File, append as-is; otherwise append string/primitive
+    if (k === 'image' && v instanceof File) {
+      fd.append('image', v);
+    } else {
+      fd.append(k, String(v));
+    }
+  }
+
   const res = await fetch(clientApiUrls.createClient, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: fd,                    // DO NOT set Content-Type; browser will set multipart boundary
   });
   return handleResponse(res);
 }
