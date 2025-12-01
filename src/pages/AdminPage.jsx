@@ -113,8 +113,8 @@ function AdminPage() {
         lastName: newClientData.lastName,
         nationalId: newClientData.nationalId,
         jobTitle: newClientData.job,
-        // image upload not wired yet (backend expects URL string)
-        // image: null,
+        // include the file if provided
+        image: newClientData.image || null,
       };
 
       // result: { client, profileUrl, qrImage }
