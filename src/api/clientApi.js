@@ -44,7 +44,25 @@ async function handleResponse(response) {
 
 export async function fetchClients() {
   const res = await fetch(clientApiUrls.listClients);
-  return handleResponse(res);
+  const data = await handleResponse(res);
+  
+  // If the backend wraps clients in an object (e.g., { clients: [...] }),
+  // extract the array. Otherwise return data as-is if it's already an array.
+  if (Array.isArray(data)) {
+    return data;
+  }
+  
+  if (data && Array.isArray(data.clients)) {
+    return data.clients;
+  }
+  
+  if (data && Array.isArray(data.data)) {
+    return data.data;
+  }
+  
+  // Fallback: return empty array if response is not in expected format
+  console.warn("fetchClients: Unexpected response format", data);
+  return [];
 }
 
 export async function fetchClientById(id) {
