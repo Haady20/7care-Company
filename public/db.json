@@ -1,0 +1,10 @@
+{
+  "client": {
+    "firstName": "Ahmed",
+    "lastName": "Ashraf",
+    "nationalId": "123456789",
+    "job": "Doctor",
+    "address": "Nasr City, Cairo",
+    "image": "https://via.placeholder.com/180"
+  }
+}

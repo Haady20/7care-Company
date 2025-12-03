@@ -1,8 +1,31 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./LandingPage.css";
+import Footer from "../components/Footer.jsx";
+import logo from "../assets/images/logo.png";
+import img4 from "../assets/images/img4.jpg";
+import img9 from "../assets/images/img9.jpg";
+import img10 from "../assets/images/img10.jpg";
+import img11 from "../assets/images/img11.jpg";
+import img21 from "../assets/images/img21.jpg";
+import img14 from "../assets/images/img14.jpg";
+import img20 from "../assets/images/img20.jpg";
+import img23 from "../assets/images/img23.jpg";
+import img24 from "../assets/images/img24.png";
+import Slogo1 from "../assets/images/Slogo-1.jpg";
+import Slogo2 from "../assets/images/Slogo-2.jpg";
+import Slogo3 from "../assets/images/Slogo-3.jpg";
+import Slogo4 from "../assets/images/Slogo-4.jpg";
+import Slogo5 from "../assets/images/Slogo-5.jpg";
+import Slogo6 from "../assets/images/Slogo-6.jpg";
+import Slogo7 from "../assets/images/Slogo-7.jpg";
+import Slogo8 from "../assets/images/Slogo-8.jpg";
+import Slogo9 from "../assets/images/Slogo-9.jpg";
+import Slogo10 from "../assets/images/Slogo-10.jpg";
+import Slogo11 from "../assets/images/Slogo-11.jpg";
+import Slogo12 from "../assets/images/Slogo-12.jpg";
 
-import codixLogo from "../assets/images/Codix-Logo.jpg";
+
 
 const FEATURES = [
   {
@@ -13,7 +36,7 @@ const FEATURES = [
     detailText:
       "هنا هنشرح بالتفصيل الميزة الأولى: إزاي بتفيد العميل، إزاي الشركة بتطبقها، وأي أرقام أو أمثلة تحب تضيفها لاحقًا.",
     imagePosition: "right",
-    image: "",
+    image: img4,
   },
   {
     id: 2,
@@ -23,7 +46,7 @@ const FEATURES = [
     detailText:
       "تفاصيل الميزة الثانية: هنا تكتب الشرح الكامل للمتابعة، أو التقارير، أو أي خدمة أساسية تقدمها الشركة.",
     imagePosition: "left",
-    image: "",
+    image: img10,
   },
   {
     id: 3,
@@ -33,7 +56,7 @@ const FEATURES = [
     detailText:
       "شرح الميزة الثالثة: تكتب هنا مثال عملي، أو سيناريو يوضح للعميل إزاي يستفيد من الميزة في حياته الواقعية.",
     imagePosition: "right",
-    image: "",
+    image: img14,
   },
   {
     id: 4,
@@ -43,7 +66,47 @@ const FEATURES = [
     detailText:
       "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
     imagePosition: "left",
-    image: "",
+    image: img23,
+  },
+    {
+    id: 5,
+    title: "عنوان الميزة الرابعة",
+    short: "وصف بسيط للميزة الرابعة ودورها في خدمة العميل.",
+    detailTitle: "عنوان تفصيلي للميزة الرابعة",
+    detailText:
+      "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
+    imagePosition: "right",
+    image: img20,
+  },
+      {
+    id: 6,
+    title: "عنوان الميزة الرابعة",
+    short: "وصف بسيط للميزة الرابعة ودورها في خدمة العميل.",
+    detailTitle: "عنوان تفصيلي للميزة الرابعة",
+    detailText:
+      "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
+    imagePosition: "left",
+    image: img21,
+  },
+        {
+    id: 7,
+    title: "عنوان الميزة الرابعة",
+    short: "وصف بسيط للميزة الرابعة ودورها في خدمة العميل.",
+    detailTitle: "عنوان تفصيلي للميزة الرابعة",
+    detailText:
+      "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
+    imagePosition: "left",
+    image: img9,
+  },
+        {
+    id: 8,
+    title: "عنوان الميزة الرابعة",
+    short: "وصف بسيط للميزة الرابعة ودورها في خدمة العميل.",
+    detailTitle: "عنوان تفصيلي للميزة الرابعة",
+    detailText:
+      "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
+    imagePosition: "right",
+    image: img11,
   },
 ];
 
@@ -55,71 +118,43 @@ const selectedFeature = FEATURES.find((f) => f.id === selectedFeatureId);
 
   return (
     <div className="landing-page">
-      <section className="landing-hero">
-        <div className="landing-hero-overlay">
-          <div className="container h-100">
-            <div className="row align-items-center h-100">
-              {/* اللوجو على الشمال */}
-              <div className="col-md-3 text-md-start text-center mb-3 mb-md-0">
-                <motion.div
-                  className="hero-logo-wrapper"
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.7, ease: "easeOut" }}
-                >
-                  <img
-                    src={""}
-                    alt="Company Logo"
-                    className="hero-logo-img"
-                  />
-                </motion.div>
-              </div>
+    <section className="landing-hero">
+      <div className="landing-hero-overlay">
+        <div className="hero-content-wrapper">
 
-              <div className="col-md-9 text-md-start text-center hero-titles-container">
-                <motion.h1
-                  className="hero-title"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-                >
-                  7Care Medical
-                </motion.h1>
-                <motion.p
-                  className="hero-subtitle"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut", delay: 0.25 }}
-                >
-                  <span>Social Medical Insurance</span>
-                </motion.p>
-              </div>
-            </div>
-          </div>
+          <motion.div
+            className="hero-logo-wrapper"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            <img src={logo} alt="Company Logo" className="hero-logo-img" />
+          </motion.div>
+
+          <motion.div
+            className="hero-side-strip"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, delay: 0.2 }}
+          >
+            <h2 className="strip-title">7Care Medical</h2>
+            <p className="strip-subtitle">(Social Medical Insurance)</p>
+
+            <a href="#about-us" className="strip-btn">
+              من نحن؟
+            </a>
+          </motion.div>
+
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section className="about-section">
+      <section className="about-section" id="about-us">
         <div className="about-logo-watermark" />
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md-5 mb-4 mb-md-0 order-md-2">
-              <motion.div
-                className="about-image-wrapper"
-                initial={{ opacity: 0, x: 60 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 0.9, ease: "easeOut" }}
-              >
-                <img
-                  src={""}
-                  alt="About company"
-                  className="about-image"
-                />
-              </motion.div>
-            </div>
-
-            <div className="col-md-7 order-md-1">
-              <motion.div
+                  <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
@@ -139,6 +174,24 @@ const selectedFeature = FEATURES.find((f) => f.id === selectedFeatureId);
                 <button className="btn btn-primary mt-3">
                   اضغط هنا للعضوية
                 </button>
+              </motion.div>
+              
+         
+            </div>
+
+            <div className="col-md-7 order-md-1">
+               <motion.div
+                className="about-image-wrapper"
+                initial={{ opacity: 0, x: 60 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.9, ease: "easeOut" }}
+              >
+                <img
+                  src={img24}
+                  alt="About company"
+                  className="about-image"
+                />
               </motion.div>
             </div>
           </div>
@@ -246,152 +299,32 @@ const selectedFeature = FEATURES.find((f) => f.id === selectedFeatureId);
         </div>
       </section>
 
-      <section className="logos-section">
-        <div className="container">
-          <h2 className="section-title text-center mb-3">
-            شركاء النجاح والجهات المتعاقدة
-          </h2>
-          <p className="section-text text-center mb-4">
-            هنا هنكتب نص بسيط يقول إن الشركة متعاقدة مع عدد من المستشفيات،
-            المعامل، الشركات، أو أي جهات أخرى، ونستخدم الشعارات هنا كدليل
-            اجتماعي (Social Proof).
-          </p>
+<section className="logos-section">
+  <h2 className="section-title text-center mb-3">شركاء النجاح والجهات المتعاقدة</h2>
+  <p className="section-text text-center mb-4">
+    هنا هنكتب نص بسيط عن الشركاء والجهات المتعاقدة…
+  </p>
 
-          <div className="logos-wrapper">
-            <div className="logos-row logos-row-top">
-              <div className="logo-strip scroll-left">
-                <span className="logo-item">Logo 1</span>
-                <span className="logo-item">Logo 2</span>
-                <span className="logo-item">Logo 3</span>
-                <span className="logo-item">Logo 4</span>
-                <span className="logo-item">Logo 5</span>
-                <span className="logo-item">Logo 6</span>
-                <span className="logo-item">Logo 1</span>
-                <span className="logo-item">Logo 2</span>
-                <span className="logo-item">Logo 3</span>
-                <span className="logo-item">Logo 4</span>
-                <span className="logo-item">Logo 5</span>
-                <span className="logo-item">Logo 6</span>
-              </div>
-            </div>
+  <div className="logos-container">
+    <div className="track">
+      {[
+        Slogo1, Slogo3, Slogo5, Slogo6, Slogo7, Slogo8, Slogo9, Slogo10, Slogo11,
+        Slogo4, Slogo2, Slogo12,
 
-            <div className="logos-row logos-row-bottom">
-              <div className="logo-strip scroll-right">
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-                <span className="logo-item">Logo</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-<footer className="site-footer mt-5">
-  <div className="container py-5">
-    <div className="row justify-content-between">
-
-      {/* LEFT SIDE */}
-      <div className="col-lg-6 mb-4">
-        <motion.div
-          initial={{ opacity: 0, x: -25 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-        >
-          <h4 className="footer-title">Feedback & Complaints</h4>
-          <p className="footer-text">
-            For any complaints, suggestions, or service inquiries, feel free to
-            contact our team anytime.
-          </p>
-
-          {/* Social icons */}
-          <div className="footer-social mt-3 d-flex gap-3">
-            <a href="#!" className="social-icon"><i className="fas fa-phone"></i></a>
-            <a href="#!" className="social-icon"><i className="fab fa-whatsapp"></i></a>
-            <a href="#!" className="social-icon"><i className="fas fa-envelope"></i></a>
-            <a href="#!" className="social-icon"><i className="fab fa-instagram"></i></a>
-            <a href="#!" className="social-icon"><i className="fab fa-facebook-f"></i></a>
-          </div>
-
-          {/* TEAM CARD */}
-          <motion.div
-            className="team-card card bg-dark text-white border-0 shadow rounded-4 p-3 mt-5"
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
-          >
-            <div className="row g-0 align-items-center">
-              
-              {/* Logo */}
-              <div className="col-5 d-flex justify-content-center">
-                <img
-                  src={codixLogo}
-                  alt="Codix Logo"
-                  className="img-fluid team-logo"
-                />
-              </div>
-
-              {/* Text */}
-              <div className="col-7 ps-2">
-                <h5 className="fw-bold mb-1">
-                  Developed by <span className="text-info">Codix</span>
-                </h5>
-                <p className="team-text fst-italic mb-2">
-                  Delivering modern and elegant digital solutions.
-                </p>
-
-                {/* Team social small */}
-                <div className="d-flex gap-2 mt-2">
-                  <a href="#!" className="social-icon-small"><i className="fab fa-whatsapp"></i></a>
-                  <a href="#!" className="social-icon-small"><i className="fas fa-envelope"></i></a>
-                  <a href="#!" className="social-icon-small"><i className="fab fa-instagram"></i></a>
-                  <a href="#!" className="social-icon-small"><i className="fab fa-facebook-f"></i></a>
-                </div>
-              </div>
-
-            </div>
-          </motion.div>
-        </motion.div>
-      </div>
-
-      <div className="col-lg-5">
-        <motion.div
-          initial={{ opacity: 0, x: 25 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: "easeOut" }}
-        >
-          <h5 className="footer-subtitle">Address</h5>
-          <p className="footer-text">
-            Add the full address of the company here: building, street, city.
-          </p>
-
-          <div className="footer-map mt-3">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28549.950296255414!2d31.67742577597444!3d26.560497655508154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x144f59375b0e09f1%3A0xa33bfcf664c5f2fe!2sSohag%2C%20El-Khouly%2C%20Sohag%201%2C%20Sohag%20Governorate!5e0!3m2!1sen!2seg!4v1764536372589!5m2!1sen!2seg"
-              width="100%"
-              height="350"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </motion.div>
-      </div>
-
+        // تكرار لضمان الحركة اللانهائية
+        Slogo1, Slogo3, Slogo5, Slogo6, Slogo7, Slogo8, Slogo9, Slogo10, Slogo11,
+        Slogo4, Slogo2, Slogo12
+      ].map((img, i) => (
+        <span key={i} className="logo-item">
+          <img src={img} alt="partner" />
+        </span>
+      ))}
     </div>
   </div>
-</footer>
+</section>
+
+
+<Footer />
 
     </div>
   );

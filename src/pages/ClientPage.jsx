@@ -1,9 +1,11 @@
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchClientByQrToken } from "../api/clientApi";
+
+import "./ClientPage.css";
+import logo from "../assets/images/logo.png";
+import Test from "../assets/images/Test.png";
+import Footer from "../components/Footer.jsx";
 
 function ClientPage() {
-  const { qrToken } = useParams();
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,29 +15,29 @@ function ClientPage() {
       try {
         setLoading(true);
         setError(null);
-        const data = await fetchClientByQrToken(qrToken);
-        // backend returns: { client, profileUrl }
+
+        const response = await fetch("/db.json");
+        const data = await response.json();
+
         setClient(data.client);
       } catch (err) {
         console.error(err);
-        setError(err.message || "Failed to load client");
+        setError("Failed to load local data");
       } finally {
         setLoading(false);
       }
     }
 
-    if (qrToken) {
-      load();
-    }
-  }, [qrToken]);
+    load();
+  }, []);
 
   if (loading) {
-    return <div className="container mt-5">Loading client...</div>;
+    return <div className="loading">Loading client...</div>;
   }
 
   if (error || !client) {
     return (
-      <div className="container mt-5">
+      <div className="loading">
         <h2>Client not found</h2>
         {error && <p>{error}</p>}
       </div>
@@ -45,93 +47,196 @@ function ClientPage() {
   const fullName = `${client.firstName || ""} ${client.lastName || ""}`.trim();
 
   return (
-    <div>
+    <>
+      {/* SECTION FULL PAGE */}
+      <section className="client-section">
 
-      <header
-        style={{
-          backgroundImage: "url('https://via.placeholder.com/1200x400')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          padding: "40px 20px",
-          color: "white",
-          position: "relative",
-        }}
-      >
-        <img
-          src="https://via.placeholder.com/120"
-          alt="logo"
-          style={{ width: 80, position: "absolute", right: 20, top: 20 }}
-        />
+        {/* LOGO IN TOP LEFT */}
+        <img src={logo} alt="logo" className="section-logo" />
 
-        <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
-          {client.firstName} {client.lastName}
-        </h1>
-      </header>
+        {/* WATERMARK */}
+        <img src={logo} alt="watermark" className="watermark-bg" />
 
+        {/* CARD CENTERED */}
+        <div className="id-card fade-in-delayed">
 
-      <section className="container my-5">
-        <div className="row">
-
-          <div className="col-md-4 text-center mb-4">
-            <img
-              src={client.image}
-              alt="client"
-              style={{
-                width: 180,
-                height: 180,
-                borderRadius: "50%",
-                objectFit: "cover",
-                border: "4px solid #ddd",
-                marginTop: "-50px"
-              }}
-            />
+          <div className="id-image">
+            <img src={Test} alt="client" />
           </div>
 
-          <div className="col-md-8">
-            <h3 className="mb-3">Client Information</h3>
-            <p><strong>First Name:</strong> {client.firstName}</p>
-            <p><strong>Last Name:</strong> {client.lastName}</p>
-            <p><strong>National ID:</strong> {client.nationalId}</p>
-            <p><strong>Job:</strong> {client.job}</p>
-            <p><strong>Address:</strong> {client.address}</p>
+          <div className="id-data">
+
+            <h2 className="client-title">{fullName}</h2>
+
+            <div className="data-box fade-item" style={{ animationDelay: "0.2s" }}>
+              <strong>First Name:</strong> {client.firstName}
+            </div>
+
+            <div className="data-box fade-item" style={{ animationDelay: "0.4s" }}>
+              <strong>Last Name:</strong> {client.lastName}
+            </div>
+
+            <div className="data-box fade-item" style={{ animationDelay: "0.6s" }}>
+              <strong>National ID:</strong> {client.nationalId}
+            </div>
+
+            <div className="data-box fade-item" style={{ animationDelay: "0.8s" }}>
+              <strong>Job:</strong> {client.job}
+            </div>
+
+            <div className="data-box fade-item" style={{ animationDelay: "1s" }}>
+              <strong>Address:</strong> {client.address}
+            </div>
+
           </div>
 
         </div>
       </section>
 
-
-      <footer className="bg-dark text-light p-4 mt-5">
-        <div className="container">
-          <div className="row">
-
-            <div className="col-md-6 mb-3">
-              <h5>الشكاوى والمقترحات</h5>
-              <div className="d-flex gap-3 mt-2">
-                <a href="#" className="text-light">📞 WhatsApp</a>
-                <a href="#" className="text-light">📧 Email</a>
-                <a href="#" className="text-light">📘 Facebook</a>
-              </div>
-            </div>
-
-            <div className="col-md-6 mb-3">
-              <h5>العنوان</h5>
-              <p>Nasr City, Cairo</p>
-              <a 
-                href="https://maps.google.com" 
-                target="_blank" 
-                rel="noreferrer"
-                className="text-info"
-              >
-                عرض الموقع على Google Maps
-              </a>
-            </div>
-
-          </div>
-        </div>
-      </footer>
-
-    </div>
+      <Footer />
+    </>
   );
 }
 
 export default ClientPage;
+
+
+
+
+// import { useParams } from "react-router-dom";
+// import { useEffect, useState } from "react";
+// import { fetchClientByQrToken } from "../api/clientApi";
+
+// function ClientPage() {
+//   const { qrToken } = useParams();
+//   const [client, setClient] = useState(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   useEffect(() => {
+//     async function load() {
+//       try {
+//         setLoading(true);
+//         setError(null);
+//         const data = await fetchClientByQrToken(qrToken);
+//         // backend returns: { client, profileUrl }
+//         setClient(data.client);
+//       } catch (err) {
+//         console.error(err);
+//         setError(err.message || "Failed to load client");
+//       } finally {
+//         setLoading(false);
+//       }
+//     }
+
+//     if (qrToken) {
+//       load();
+//     }
+//   }, [qrToken]);
+
+//   if (loading) {
+//     return <div className="container mt-5">Loading client...</div>;
+//   }
+
+//   if (error || !client) {
+//     return (
+//       <div className="container mt-5">
+//         <h2>Client not found</h2>
+//         {error && <p>{error}</p>}
+//       </div>
+//     );
+//   }
+
+//   const fullName = `${client.firstName || ""} ${client.lastName || ""}`.trim();
+
+//   return (
+//     <div>
+
+//       <header
+//         style={{
+//           backgroundImage: "url('https://via.placeholder.com/1200x400')",
+//           backgroundSize: "cover",
+//           backgroundPosition: "center",
+//           padding: "40px 20px",
+//           color: "white",
+//           position: "relative",
+//         }}
+//       >
+//         <img
+//           src="https://via.placeholder.com/120"
+//           alt="logo"
+//           style={{ width: 80, position: "absolute", right: 20, top: 20 }}
+//         />
+
+//         <h1 style={{ textAlign: "center", fontWeight: "bold" }}>
+//           {client.firstName} {client.lastName}
+//         </h1>
+//       </header>
+
+
+//       <section className="container my-5">
+//         <div className="row">
+
+//           <div className="col-md-4 text-center mb-4">
+//             <img
+//               src={client.image}
+//               alt="client"
+//               style={{
+//                 width: 180,
+//                 height: 180,
+//                 borderRadius: "50%",
+//                 objectFit: "cover",
+//                 border: "4px solid #ddd",
+//                 marginTop: "-50px"
+//               }}
+//             />
+//           </div>
+
+//           <div className="col-md-8">
+//             <h3 className="mb-3">Client Information</h3>
+//             <p><strong>First Name:</strong> {client.firstName}</p>
+//             <p><strong>Last Name:</strong> {client.lastName}</p>
+//             <p><strong>National ID:</strong> {client.nationalId}</p>
+//             <p><strong>Job:</strong> {client.job}</p>
+//             <p><strong>Address:</strong> {client.address}</p>
+//           </div>
+
+//         </div>
+//       </section>
+
+
+//       <footer className="bg-dark text-light p-4 mt-5">
+//         <div className="container">
+//           <div className="row">
+
+//             <div className="col-md-6 mb-3">
+//               <h5>الشكاوى والمقترحات</h5>
+//               <div className="d-flex gap-3 mt-2">
+//                 <a href="#" className="text-light">📞 WhatsApp</a>
+//                 <a href="#" className="text-light">📧 Email</a>
+//                 <a href="#" className="text-light">📘 Facebook</a>
+//               </div>
+//             </div>
+
+//             <div className="col-md-6 mb-3">
+//               <h5>العنوان</h5>
+//               <p>Nasr City, Cairo</p>
+//               <a 
+//                 href="https://maps.google.com" 
+//                 target="_blank" 
+//                 rel="noreferrer"
+//                 className="text-info"
+//               >
+//                 عرض الموقع على Google Maps
+//               </a>
+//             </div>
+
+//           </div>
+//         </div>
+//       </footer>
+
+//     </div>
+//   );
+// }
+
+// export default ClientPage;

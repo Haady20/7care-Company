@@ -12,119 +12,143 @@ function ClientsTable({
   onEditClick,
   onDeleteClick,
 }) {
-  const handleSearchInputChange = (e) => {
+  const handleSearchInput = (e) => {
     onSearchChange(e.target.value);
   };
 
-  const handleJobFilterChange = (e) => {
+  const handleJobChange = (e) => {
     onJobFilterChange(e.target.value);
   };
 
-  const handlePrevPage = () => {
-    if (currentPage > 1) onPageChange(currentPage - 1);
-  };
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) onPageChange(currentPage + 1);
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    onPageChange(page);
   };
 
   return (
-    <div className="mb-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <div className="d-flex gap-2">
+    <div className="clients-wrapper">
+      {/* Top toolbar */}
+      <div className="clients-toolbar">
+        <div className="clients-search-group">
+          <label className="form-label mb-1 small text-muted">
+            Search by name
+          </label>
           <input
             type="text"
-            className="form-control"
-            placeholder="search by name"
+            className="form-control clients-search-input"
+            placeholder="Type client name..."
             value={searchTerm}
-            onChange={handleSearchInputChange}
+            onChange={handleSearchInput}
           />
-          <button className="btn btn-secondary" type="button">
-            Search
-          </button>
         </div>
 
-        <button className="btn btn-primary" type="button" onClick={onAddClick}>
-          Add Client
-        </button>
+        <div className="clients-filter-group">
+          <label className="form-label mb-1 small text-muted">
+            Filter by job
+          </label>
+          <select
+            className="form-select clients-filter-select"
+            value={jobFilter}
+            onChange={handleJobChange}
+          >
+            {jobs.map((job) => (
+              <option key={job} value={job}>
+                {job}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="clients-add-group">
+          <button className="btn btn-gold" onClick={onAddClick}>
+            + Add Client
+          </button>
+        </div>
       </div>
 
-      <table className="table table-striped">
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>National ID</th>
-            <th>
-              Job
-              <select
-                className="form-select form-select-sm d-inline-block ms-2"
-                style={{ width: "auto" }}
-                value={jobFilter}
-                onChange={handleJobFilterChange}
-              >
-                {jobs.map((job) => (
-                  <option key={job} value={job}>
-                    {job}
-                  </option>
-                ))}
-              </select>
-            </th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {clients.length === 0 ? (
+      {/* Table */}
+      <div className="table-responsive clients-table-container">
+        <table className="table table-hover align-middle mb-0 clients-table">
+          <thead>
             <tr>
-              <td colSpan="5" className="text-center">
-                No clients found.
-              </td>
+              <th>#</th>
+              <th>Full Name</th>
+              <th>National ID</th>
+              <th>Job</th>
+              <th className="text-end">Actions</th>
             </tr>
-          ) : (
-            clients.map((client) => (
-              <tr key={client.id}>
-                <td>{client.firstName}</td>
-                <td>{client.lastName}</td>
-                <td>{client.nationalId}</td>
-                <td>{client.job}</td>
-                <td>
-                  <button
-                    className="btn btn-sm btn-outline-primary me-2"
-                    onClick={() => onEditClick(client)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => onDeleteClick(client)}
-                  >
-                    Delete
-                  </button>
+          </thead>
+          <tbody>
+            {clients.length === 0 ? (
+              <tr>
+                <td colSpan="5" className="text-center text-muted py-4">
+                  No clients found.
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+            ) : (
+              clients.map((client, index) => (
+                <tr key={client.id || index}>
+                  <td>{index + 1}</td>
+                  <td>
+                    <div className="client-name-cell">
+                      <span className="client-avatar">
+                        {(client.firstName?.[0] || "?") +
+                          (client.lastName?.[0] || "")}
+                      </span>
+                      <div>
+                        <div className="fw-semibold">
+                          {client.firstName} {client.lastName}
+                        </div>
+                        <div className="small text-muted">
+                          ID: {client.id || "-"}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{client.nationalId || "-"}</td>
+                  <td>
+                    <span className="badge rounded-pill bg-light text-dark client-job-badge">
+                      {client.job || "—"}
+                    </span>
+                  </td>
+                  <td className="text-end">
+                    <button
+                      className="btn btn-sm btn-outline-secondary me-2"
+                      onClick={() => onEditClick(client)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-sm btn-outline-danger"
+                      onClick={() => onDeleteClick(client)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      <div className="d-flex justify-content-between align-items-center">
-        <span>
-          Page {currentPage} of {totalPages}
-        </span>
+      {/* Pagination */}
+      <div className="clients-pagination">
+        <div className="text-muted small">
+          Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+        </div>
         <div className="btn-group">
           <button
             className="btn btn-sm btn-outline-secondary"
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
           >
-            Previous
+            ‹ Prev
           </button>
           <button
             className="btn btn-sm btn-outline-secondary"
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
           >
-            Next
+            Next ›
           </button>
         </div>
       </div>

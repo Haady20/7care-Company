@@ -12,156 +12,122 @@ function ClientActionsPanel({
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    job: "",
     nationalId: "",
-    job: jobs[1] || "Doctor",
-    image: null,
   });
 
   useEffect(() => {
     if (action === "edit" && client) {
       setFormData({
-        firstName: client.firstName,
-        lastName: client.lastName,
-        nationalId: client.nationalId,
-        job: client.job,
-        image: null,
+        firstName: client.firstName || "",
+        lastName: client.lastName || "",
+        job: client.job || "",
+        nationalId: client.nationalId || "",
       });
     } else if (action === "add") {
       setFormData({
         firstName: "",
         lastName: "",
+        job: "",
         nationalId: "",
-        job: jobs[1] || "Doctor",
-        image: null,
       });
     }
-  }, [action, client, jobs]);
+  }, [action, client]);
 
   if (!action) return null;
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData((prev) => ({ ...prev, image: files[0] || null }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (action === "add") {
       onAddClient(formData);
-    }
-
-    if (action === "edit" && client) {
-      onUpdateClient({
-        ...client,
-        ...formData,
-      });
-    }
-  };
-
-  const handleDeleteClick = () => {
-    if (client) {
-      const confirmed = window.confirm(
-        `Are you sure you want to delete ${client.firstName} ${client.lastName}?`
-      );
-      if (confirmed) {
-        onConfirmDelete(client.id);
-      }
+    } else if (action === "edit") {
+      onUpdateClient({ ...client, ...formData });
     }
   };
 
   return (
-    <div className="card mt-4">
-      <div className="card-body">
-        {action === "add" && <h4 className="mb-3">Add Client</h4>}
-        {action === "edit" && <h4 className="mb-3">Edit Client</h4>}
-        {action === "delete" && <h4 className="mb-3">Delete Client</h4>}
+    <div className="client-actions-panel card-shadow">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h5 className="mb-0 text-gold fw-bold">
+          {action === "add" && "Add New Client"}
+          {action === "edit" && "Edit Client"}
+          {action === "delete" && "Delete Client"}
+        </h5>
 
-        {action === "delete" && client && (
-          <>
-            <p>
-              <strong>First Name:</strong> {client.firstName}
-            </p>
-            <p>
-              <strong>Last Name:</strong> {client.lastName}
-            </p>
-            <p>
-              <strong>National ID:</strong> {client.nationalId}
-            </p>
-            <p>
-              <strong>Job:</strong> {client.job}
-            </p>
-            <button className="btn btn-danger me-2" onClick={handleDeleteClick}>
-              Delete
-            </button>
-            <button className="btn btn-secondary" onClick={onCancel}>
+        <button className="btn-close" onClick={onCancel}></button>
+      </div>
+
+      {action === "delete" ? (
+        <div>
+          <p className="mb-4">
+            Are you sure you want to delete{" "}
+            <strong>
+              {client?.firstName} {client?.lastName}
+            </strong>
+            ?
+          </p>
+
+          <div className="d-flex justify-content-end gap-2">
+            <button className="btn btn-outline-secondary" onClick={onCancel}>
               Cancel
             </button>
-          </>
-        )}
-
-        {(action === "add" || action === "edit") && (
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label">Image</label>
-              <input
-                type="file"
-                className="form-control"
-                name="image"
-                onChange={handleChange}
-                accept="image/*"
-              />
-            </div>
-
-            <div className="mb-3">
+            <button
+              className="btn btn-danger"
+              onClick={() => onConfirmDelete(client.id)}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div className="row g-3">
+            <div className="col-md-6">
               <label className="form-label">First Name</label>
               <input
-                type="text"
-                className="form-control"
                 name="firstName"
+                className="form-control"
                 value={formData.firstName}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <div className="mb-3">
+            <div className="col-md-6">
               <label className="form-label">Last Name</label>
               <input
-                type="text"
-                className="form-control"
                 name="lastName"
+                className="form-control"
                 value={formData.lastName}
                 onChange={handleChange}
                 required
               />
             </div>
 
-            <div className="mb-3">
+            <div className="col-md-6">
               <label className="form-label">National ID</label>
               <input
-                type="text"
-                className="form-control"
                 name="nationalId"
+                className="form-control"
                 value={formData.nationalId}
                 onChange={handleChange}
-                required
               />
             </div>
 
-            <div className="mb-3">
+            <div className="col-md-6">
               <label className="form-label">Job</label>
               <select
-                className="form-select"
                 name="job"
+                className="form-select"
                 value={formData.job}
                 onChange={handleChange}
-                required
               >
+                <option value="">Select Job</option>
                 {jobs
                   .filter((j) => j !== "All")
                   .map((job) => (
@@ -171,20 +137,23 @@ function ClientActionsPanel({
                   ))}
               </select>
             </div>
+          </div>
 
-            <button type="submit" className="btn btn-primary me-2">
-              {action === "add" ? "Add" : "Update"}
-            </button>
+          <div className="d-flex justify-content-end gap-2 mt-4">
             <button
               type="button"
-              className="btn btn-secondary"
+              className="btn btn-outline-secondary"
               onClick={onCancel}
             >
               Cancel
             </button>
-          </form>
-        )}
-      </div>
+
+            <button type="submit" className="btn btn-gold">
+              {action === "add" ? "Add Client" : "Save Changes"}
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }
