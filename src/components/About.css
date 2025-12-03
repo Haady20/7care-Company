@@ -1,0 +1,28 @@
+.about-section {
+  position: relative;
+  padding: 70px 0;
+  background-color: #060605f0;
+  overflow: hidden;
+}
+
+.about-logo-watermark {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  pointer-events: none;
+}
+
+.about-image-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.about-image {
+  max-width: 100%;
+  border-radius: 16px;
+  display: block;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}

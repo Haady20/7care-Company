@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./LandingPage.css";
 import Footer from "../components/Footer.jsx";
+import About from "../components/About.jsx";
 import logo from "../assets/images/logo.png";
 import img4 from "../assets/images/img4.jpg";
 import img9 from "../assets/images/img9.jpg";
@@ -24,8 +26,6 @@ import Slogo9 from "../assets/images/Slogo-9.jpg";
 import Slogo10 from "../assets/images/Slogo-10.jpg";
 import Slogo11 from "../assets/images/Slogo-11.jpg";
 import Slogo12 from "../assets/images/Slogo-12.jpg";
-
-
 
 const FEATURES = [
   {
@@ -114,6 +114,7 @@ function LandingPage() {
 const [selectedFeatureId, setSelectedFeatureId] = useState(null);
 
 const selectedFeature = FEATURES.find((f) => f.id === selectedFeatureId);
+const detailsRef = useRef(null);
 
 
   return (
@@ -149,155 +150,129 @@ const selectedFeature = FEATURES.find((f) => f.id === selectedFeatureId);
       </div>
     </section>
 
-      <section className="about-section" id="about-us">
-        <div className="about-logo-watermark" />
-        <div className="container">
-          <div className="row align-items-center">
-            <div className="col-md-5 mb-4 mb-md-0 order-md-2">
-                  <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-              >
-                <h2 className="section-title">نبذة عن الشركة</h2>
-                <p className="section-text">
-                  هنا هنكتب فقرة تعريفية عن الشركة: متى بدأت، رسالتها، رؤيتها،
-                  والقيمة اللي بتقدمها للعملاء. نص يمهّد للكلاينت اللي لسه
-                  بيتعرف على الشركة لأول مرة.
-                </p>
-                <p className="section-text">
-                  ممكن تضيف هنا سطر إضافي يوضح نوع الخدمات (ائتمان، تسهيلات،
-                  متابعة مالية، الخ...) بحيث العميل يخرج وهو فاهم الشركة بتعمل إيه
-                  بالضبط.
-                </p>
-                <button className="btn btn-primary mt-3">
-                  اضغط هنا للعضوية
-                </button>
-              </motion.div>
-              
-         
-            </div>
+<About />
 
-            <div className="col-md-7 order-md-1">
-               <motion.div
-                className="about-image-wrapper"
-                initial={{ opacity: 0, x: 60 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, amount: 0.4 }}
-                transition={{ duration: 0.9, ease: "easeOut" }}
-              >
-                <img
-                  src={img24}
-                  alt="About company"
-                  className="about-image"
-                />
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </section>
+<section className="features-section">
+  <div className="container">
 
-      <section className="features-section">
-        <div className="container">
-          <h2 className="section-title text-center mb-3">
-            المزايا والخدمات الرئيسية
-          </h2>
-          <p className="section-text text-center mb-5">
-            هنا هنكتب سطر تمهيدي بسيط يعرّف العميل إن دي أهم النقاط اللي
-            بتميز الشركة والخدمات اللي هتستفيد منها لما تتعامل معانا.
-          </p>
+    <h2 className="section-title text-center mb-3">
+      المزايا والخدمات الرئيسية
+    </h2>
 
-          <div className="row g-3 mb-4">
-            {FEATURES.map((feature) => {
-              const isActive = feature.id === selectedFeatureId;
-              return (
-                <div key={feature.id} className="col-6 col-md-3">
-                  <motion.div
-                    className={
-                      "feature-card card " + (isActive ? "feature-card-active" : "")
-                    }
-                    onClick={() => setSelectedFeatureId(feature.id)}
-                    whileHover={{ y: isActive ? 6 : -4 }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                  >
-                    <div className="card-body feature-card-body">
-                      <div className="feature-card-inner">
-                        <div className="feature-card-image-wrapper">
-                          <img
-                            src={feature.image}
-                            alt={feature.title}
-                            className="feature-card-image"
-                          />
-                        </div>
-                        <div className="feature-card-vertical">
-                          <span className="feature-vertical-text">
-                            {feature.short}
-                          </span>
-                        </div>
-                      </div>
-                      <h5 className="card-title feature-card-title">
-                        {feature.title}
-                      </h5>
-                    </div>
-                  </motion.div>
+    <p className="section-text text-center mb-5">
+      هنا هنكتب سطر تمهيدي بسيط يعرّف العميل إن دي أهم النقاط اللي
+      بتميز الشركة والخدمات اللي هتستفيد منها لما تتعامل معانا.
+    </p>
+
+    {/* نعمل ref لمكان التفاصيل */}
+    {/** IMPORTANT **/}
+    const detailsRef = useRef(null);
+
+    <div className="row g-3 mb-4">
+      {FEATURES.map((feature) => {
+        const isActive = feature.id === selectedFeatureId;
+
+        return (
+          <div key={feature.id} className="col-6 col-md-3">
+            <motion.div
+              className={
+                "feature-card card " +
+                (isActive ? "feature-card-active" : "")
+              }
+              onClick={() => {
+                setSelectedFeatureId(feature.id);
+
+                // ننزل تلقائي بعد ما التفاصيل تتعمل render
+                setTimeout(() => {
+                  detailsRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }, 250);
+              }}
+              whileHover={{ y: isActive ? 6 : -4 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            >
+              <div className="card-body feature-card-body">
+                <div className="feature-card-inner">
+                  <div className="feature-card-image-wrapper">
+                    <img
+                      src={feature.image}
+                      alt={feature.title}
+                      className="feature-card-image"
+                    />
+                  </div>
+                  <div className="feature-card-vertical">
+                    <span className="feature-vertical-text">
+                      {feature.short}
+                    </span>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
-
-{selectedFeature && (
-  <div className="feature-details card mt-4">
-    <div className="card-body">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={selectedFeature.id}
-          className="row align-items-center"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -15 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
-        >
-          {selectedFeature.imagePosition === "left" && (
-            <div className="col-md-5 mb-4 mb-md-0">
-              <div className="feature-image-placeholder">
-                <img
-                  src={selectedFeature.image}
-                  alt={selectedFeature.title}
-                  className="feature-detail-image"
-                />
+                <h5 className="card-title feature-card-title">
+                  {feature.title}
+                </h5>
               </div>
-            </div>
-          )}
-
-          <div className="col-md-7">
-            <h3 className="feature-detail-title">
-              {selectedFeature.detailTitle}
-            </h3>
-            <p className="feature-detail-text">
-              {selectedFeature.detailText}
-            </p>
+            </motion.div>
           </div>
-
-          {selectedFeature.imagePosition === "right" && (
-            <div className="col-md-5 mb-4 mb-md-0 order-md-last">
-              <div className="feature-image-placeholder">
-                <img
-                  src={selectedFeature.image}
-                  alt={selectedFeature.title}
-                  className="feature-detail-image"
-                />
-              </div>
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+        );
+      })}
     </div>
-  </div>
-)}
+
+    {/* DETAILS SECTION */}
+    {selectedFeature && (
+      <div ref={detailsRef} className="feature-details card mt-4">
+        <div className="card-body">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedFeature.id}
+              className="row align-items-center"
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+            >
+              {selectedFeature.imagePosition === "left" && (
+                <div className="col-md-5 mb-4 mb-md-0">
+                  <div className="feature-image-placeholder">
+                    <img
+                      src={selectedFeature.image}
+                      alt={selectedFeature.title}
+                      className="feature-detail-image"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="col-md-7">
+                <h3 className="feature-detail-title">
+                  {selectedFeature.detailTitle}
+                </h3>
+                <p className="feature-detail-text">
+                  {selectedFeature.detailText}
+                </p>
+              </div>
+
+              {selectedFeature.imagePosition === "right" && (
+                <div className="col-md-5 mb-4 mb-md-0 order-md-last">
+                  <div className="feature-image-placeholder">
+                    <img
+                      src={selectedFeature.image}
+                      alt={selectedFeature.title}
+                      className="feature-detail-image"
+                    />
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
-      </section>
+      </div>
+    )}
+
+  </div>
+</section>
+
 
 <section className="logos-section">
   <h2 className="section-title text-center mb-3">شركاء النجاح والجهات المتعاقدة</h2>
@@ -322,7 +297,6 @@ const selectedFeature = FEATURES.find((f) => f.id === selectedFeatureId);
     </div>
   </div>
 </section>
-
 
 <Footer />
 

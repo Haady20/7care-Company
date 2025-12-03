@@ -250,12 +250,6 @@ function AdminPage() {
 
 export default AdminPage;
 
-
-
-
-
-
-
 // import { useState, useMemo, useEffect } from "react";
 // import ClientsTable from "../components/ClientsTable";
 // import ClientActionsPanel from "../components/ClientActionsPanel";

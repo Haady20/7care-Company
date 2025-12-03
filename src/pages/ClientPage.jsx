@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef  } from "react";
 
 import "./ClientPage.css";
 import logo from "../assets/images/logo.png";
+import About from "../components/About.jsx";
 import Test from "../assets/images/Test.png";
 import Footer from "../components/Footer.jsx";
 
@@ -10,98 +11,121 @@ function ClientPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+const [headerOpacity, setHeaderOpacity] = useState(1);
+
+useEffect(() => {
+  const handleScroll = () => {
+    const scrollY = window.scrollY;
+
+    let newOpacity = 1 - scrollY / 150;
+    if (newOpacity < 0) newOpacity = 0;
+
+    setHeaderOpacity(newOpacity);
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => window.removeEventListener("scroll", handleScroll);
+}, []);
+
+
   useEffect(() => {
     async function load() {
       try {
-        setLoading(true);
-        setError(null);
-
         const response = await fetch("/db.json");
         const data = await response.json();
-
         setClient(data.client);
       } catch (err) {
         console.error(err);
-        setError("Failed to load local data");
+        setError("Failed to load data");
       } finally {
         setLoading(false);
       }
     }
-
     load();
   }, []);
 
-  if (loading) {
-    return <div className="loading">Loading client...</div>;
-  }
+  if (loading) return <div className="loading">Loading...</div>;
+  if (error || !client) return <div className="loading">Client not found</div>;
 
-  if (error || !client) {
-    return (
-      <div className="loading">
-        <h2>Client not found</h2>
-        {error && <p>{error}</p>}
-      </div>
-    );
-  }
-
-  const fullName = `${client.firstName || ""} ${client.lastName || ""}`.trim();
+  const fullName = `${client.firstName} ${client.lastName}`;
 
   return (
-    <>
-      {/* SECTION FULL PAGE */}
-      <section className="client-section">
+    <div className="page-wrapper">
+      <header style={{ opacity: headerOpacity }} className="header">
+        <img 
+          src={logo} 
+          alt="logo" 
+          className="header-logo"
+        />
+  <div className="hero-content">
+    <h2 className="hero-name"><span className="text-dark">{client.job}/ </span>
+       {fullName}</h2>
+  </div>
+      </header>
 
-        {/* LOGO IN TOP LEFT */}
-        <img src={logo} alt="logo" className="section-logo" />
+<section className="hero-section">
+  <div className="hero-overlay"></div>
 
-        {/* WATERMARK */}
-        <img src={logo} alt="watermark" className="watermark-bg" />
+  <div className="hero-text">
+    <h2>صحتك في أمان مع نخبة من أفضل الأطباء</h2>
+  </div>
+</section>
 
-        {/* CARD CENTERED */}
-        <div className="id-card fade-in-delayed">
+<section className="client-info-card">
 
-          <div className="id-image">
-            <img src={Test} alt="client" />
-          </div>
+  <div className="client-info-photo">
+    <img src={Test} alt="client" />
+  </div>
 
-          <div className="id-data">
+  <h3 className="client-info-name">{fullName}</h3>
 
-            <h2 className="client-title">{fullName}</h2>
+  <div className="client-info-grid">
 
-            <div className="data-box fade-item" style={{ animationDelay: "0.2s" }}>
-              <strong>First Name:</strong> {client.firstName}
-            </div>
+    <div className="info-item border-blue">
+      <span className="info-label">الاسم الأول</span>
+      <span className="info-value">{client.firstName}</span>
+    </div>
 
-            <div className="data-box fade-item" style={{ animationDelay: "0.4s" }}>
-              <strong>Last Name:</strong> {client.lastName}
-            </div>
+    <div className="info-item border-blue-dark">
+      <span className="info-label">الاسم الأخير</span>
+      <span className="info-value">{client.lastName}</span>
+    </div>
 
-            <div className="data-box fade-item" style={{ animationDelay: "0.6s" }}>
-              <strong>National ID:</strong> {client.nationalId}
-            </div>
+    <div className="info-item border-green">
+      <span className="info-label">الرقم القومي</span>
+      <span className="info-value">{client.nationalId}</span>
+    </div>
 
-            <div className="data-box fade-item" style={{ animationDelay: "0.8s" }}>
-              <strong>Job:</strong> {client.job}
-            </div>
+    <div className="info-item border-purple">
+      <span className="info-label">الوظيفة</span>
+      <span className="info-value">{client.job}</span>
+    </div>
+    <div className="info-item border-red">
+      <span className="info-label">تاريخ التسجيل</span>
+      <span className="info-value">{client.startDate}</span>
+    </div>
 
-            <div className="data-box fade-item" style={{ animationDelay: "1s" }}>
-              <strong>Address:</strong> {client.address}
-            </div>
+        <div className="info-item border-purple">
+      <span className="info-label">تاريخ الانتهاء</span>
+      <span className="info-value">{client.endDate}</span>
+    </div>
+  </div>
 
-          </div>
+</section>
 
-        </div>
-      </section>
-
-      <Footer />
-    </>
+<About/>
+      <button
+        className="scroll-top-btn"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
+        ↑
+      </button>
+  <Footer/>
+    </div>
   );
 }
 
 export default ClientPage;
-
-
-
 
 // import { useParams } from "react-router-dom";
 // import { useEffect, useState } from "react";
