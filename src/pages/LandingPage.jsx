@@ -164,10 +164,6 @@ const detailsRef = useRef(null);
       بتميز الشركة والخدمات اللي هتستفيد منها لما تتعامل معانا.
     </p>
 
-    {/* نعمل ref لمكان التفاصيل */}
-    {/** IMPORTANT **/}
-    const detailsRef = useRef(null);
-
     <div className="row g-3 mb-4">
       {FEATURES.map((feature) => {
         const isActive = feature.id === selectedFeatureId;
@@ -182,7 +178,6 @@ const detailsRef = useRef(null);
               onClick={() => {
                 setSelectedFeatureId(feature.id);
 
-                // ننزل تلقائي بعد ما التفاصيل تتعمل render
                 setTimeout(() => {
                   detailsRef.current?.scrollIntoView({
                     behavior: "smooth",
@@ -219,7 +214,6 @@ const detailsRef = useRef(null);
       })}
     </div>
 
-    {/* DETAILS SECTION */}
     {selectedFeature && (
       <div ref={detailsRef} className="feature-details card mt-4">
         <div className="card-body">
@@ -286,7 +280,6 @@ const detailsRef = useRef(null);
         Slogo1, Slogo3, Slogo5, Slogo6, Slogo7, Slogo8, Slogo9, Slogo10, Slogo11,
         Slogo4, Slogo2, Slogo12,
 
-        // تكرار لضمان الحركة اللانهائية
         Slogo1, Slogo3, Slogo5, Slogo6, Slogo7, Slogo8, Slogo9, Slogo10, Slogo11,
         Slogo4, Slogo2, Slogo12
       ].map((img, i) => (
