@@ -43,7 +43,8 @@
   animation: slideIn 1.2s ease-out forwards, pulseText 2.5s ease-in-out infinite 1.3s;
   opacity: 0;
 }
-.hero-content-wrapper{
+
+.fix{
   z-index: 10;
   bottom: -40%;
   

@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
-import ClientsTable from "../components/ClientsTable";
-import ClientActionsPanel from "../components/ClientActionsPanel";
-import "../styles/admin.css";
+import ClientsTable from "../../components/ClientsTable";
+import ClientActionsPanel from "../../components/ClientActionsPanel";
+import "../../styles/admin.css";
+
 
 const JOBS = ["All", "Doctor", "Engineer", "Accountant"];
 const ITEMS_PER_PAGE = 20;

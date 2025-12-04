@@ -62,7 +62,7 @@ useEffect(() => {
 <section className="hero-section">
   <div className="hero-overlay"></div>
 
-        <div className="hero-content-wrapper">
+        <div className="hero-content-wrapper fix">
 
           <motion.div
             className="hero-logo-wrapper"
