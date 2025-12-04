@@ -9,6 +9,10 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/" element={<ClientPage />} />
 
+<<<<<<< HEAD
+=======
+      <Route path="/" element={<LandingPage />} />
+>>>>>>> b613287d326b786f74ef885a8c3b731927e60f67
 
       <Route path="/" element={<AdminPage />} />
     </Routes>

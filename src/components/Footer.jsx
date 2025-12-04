@@ -72,7 +72,7 @@ const location2 =
                   <a href="https://wa.me/01016784274" className="social-icon-small"><i className="fab fa-whatsapp"></i></a>
                   <a href="https://www.linkedin.com/company/codix-tech/" className="social-icon-small"> <i className="fab fa-linkedin"></i></a>
                   <a href="https://www.instagram.com/codix.tech?igsh=MXZ2Mnd4YnI3cmJtNg==" className="social-icon-small"><i className="fab fa-instagram"></i></a>
-                  {/* <a href="#!" className="social-icon-small"><i className="fab fa-facebook-f"></i></a> */}
+                  <a href="https://www.facebook.com/share/1CS6U1visH/?mibextid=wwXIfr" className="social-icon-small"><i className="fab fa-facebook-f"></i></a>
                 </div>
               </div>
 

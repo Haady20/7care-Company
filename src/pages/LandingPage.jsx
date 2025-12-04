@@ -141,6 +141,10 @@ const detailsRef = useRef(null);
       هنا هنكتب سطر تمهيدي بسيط يعرّف العميل إن دي أهم النقاط اللي
       بتميز الشركة والخدمات اللي هتستفيد منها لما تتعامل معانا.
     </p>
+<<<<<<< HEAD
+=======
+
+>>>>>>> b613287d326b786f74ef885a8c3b731927e60f67
     <div className="row g-3 mb-4">
       {FEATURES.map((feature) => {
         const isActive = feature.id === selectedFeatureId;
@@ -285,6 +289,17 @@ const detailsRef = useRef(null);
   ))}
 </div>
 
+<<<<<<< HEAD
+=======
+        Slogo1, Slogo3, Slogo5, Slogo6, Slogo7, Slogo8, Slogo9, Slogo10, Slogo11,
+        Slogo4, Slogo2, Slogo12
+      ].map((img, i) => (
+        <span key={i} className="logo-item">
+          <img src={img} alt="partner" />
+        </span>
+      ))}
+    </div>
+>>>>>>> b613287d326b786f74ef885a8c3b731927e60f67
   </div>
 </section>
 
