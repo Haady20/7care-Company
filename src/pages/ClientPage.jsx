@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef  } from "react";
 import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 import "./ClientPage.css";
 import About from "../components/About.jsx";
@@ -61,9 +62,41 @@ useEffect(() => {
 <section className="hero-section">
   <div className="hero-overlay"></div>
 
-  <div className="hero-text">
-    <h2>صحتك في أمان مع نخبة من أفضل الأطباء</h2>
-  </div>
+        <div className="hero-content-wrapper">
+
+          <motion.div
+            className="hero-logo-wrapper"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+          </motion.div>
+<motion.div
+  className="hero-side-strip enhanced-strip"
+  initial={{ opacity: 0, x: -30 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 0.9, delay: 0.2 }}
+>
+  
+  <div className="strip-accent"></div>
+
+  <h2 className="strip-title">
+    <span className="highlight">7Care</span> Medical
+  </h2>
+
+  <p className="strip-subtitle">
+    صحتك في أمان <span className="heart-icon">❤️</span>  
+    مع نخبة من أفضل الأطباء
+  </p>
+
+  <a href="#about-us" className="strip-btn enhanced-btn">
+    تعرف علينا
+  </a>
+
+</motion.div>
+
+
+        </div>
 </section>
 
 <section className="client-info-card">

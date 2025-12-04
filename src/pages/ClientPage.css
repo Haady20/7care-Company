@@ -43,6 +43,87 @@
   animation: slideIn 1.2s ease-out forwards, pulseText 2.5s ease-in-out infinite 1.3s;
   opacity: 0;
 }
+.hero-content-wrapper{
+  z-index: 10;
+  bottom: -40%;
+  
+}
+
+/* تحسين الــ HERO TEXT SECTION */
+.enhanced-strip {
+  padding: 20px 25px;
+  backdrop-filter: blur(2px);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  width: fit-content;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.18);
+}
+
+/* الزخرفة الجانبية */
+.strip-accent {
+  position: absolute;
+  left: -14px;
+  top: 15%;
+  width: 4px;
+  height: 70%;
+  background: linear-gradient(180deg, #0bb4d4, #1b4f92);
+  border-radius: 10px;
+}
+
+/* العنوان */
+.strip-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.highlight {
+  color: #0bb4d4;
+}
+
+/* النص */
+.strip-subtitle {
+  font-size: 18px;
+  color: #f0f7ff;
+  margin-bottom: 18px;
+  line-height: 1.7;
+  font-weight: 600;
+}
+
+.heart-icon {
+  animation: pulse 1.8s infinite ease-in-out;
+  display: inline-block;
+}
+
+/* نبض للقلب */
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+
+/* زر احترافي */
+.enhanced-btn {
+  background: linear-gradient(135deg, #0bb4d4, #1b4f92);
+  padding: 10px 22px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  transition: 0.25s ease;
+  display: inline-block;
+}
+
+.enhanced-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
 
 @keyframes slideIn {
   0% {
