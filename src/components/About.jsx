@@ -1,7 +1,5 @@
 import "./About.css";
 import { motion } from "framer-motion";
-import img24 from "../assets/images/img24.png";
-import codixLogo from "../assets/images/Codix-Logo.jpg";
 
 function About() {
   return (
@@ -43,11 +41,7 @@ function About() {
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.9, ease: "easeOut" }}
               >
-                <img
-                  src={img24}
-                  alt="About company"
-                  className="about-image"
-                />
+                <img className="about-image" src="/images/img24.png" />
               </motion.div>
             </div>
           </div>

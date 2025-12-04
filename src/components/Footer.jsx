@@ -1,8 +1,18 @@
 import "./Footer.css";
 import { motion } from "framer-motion";
-import codixLogo from "../assets/images/Codix-Logo.jpg";
+import { useState } from "react";
+
+
 
 function Footer() {
+  
+const location1 =
+ "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3455.5807414390724!2d31.160480676173098!3d29.991476821077292!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjnCsDU5JzI5LjMiTiAzMcKwMDknNDcuMCJF!5e0!3m2!1sen!2seg!4v1764857490354!5m2!1sen!2seg";
+const location2 =
+  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3451.455704939325!2d31.325906376176352!3d30.109771015471427!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14581594fed8c49b%3A0x6296a18aba52dc63!2s48%20Gesr%20Al%20Suez%2C%20El-Nozha%2C%20El%20Nozha%2C%20Cairo%20Governorate%204470020!5e0!3m2!1sen!2seg!4v1764857055548!5m2!1sen!2seg";
+
+  const [mapSrc, setMapSrc] = useState(location1);
+
   return (
 <footer className="site-footer">
   <div className="container py-5">
@@ -24,11 +34,12 @@ function Footer() {
 
           {/* Social icons */}
           <div className="footer-social mt-3 d-flex gap-3">
-            <a href="#!" className="social-icon"><i className="fas fa-phone"></i></a>
-            <a href="#!" className="social-icon"><i className="fab fa-whatsapp"></i></a>
-            <a href="#!" className="social-icon"><i className="fas fa-envelope"></i></a>
-            <a href="#!" className="social-icon"><i className="fab fa-instagram"></i></a>
-            <a href="#!" className="social-icon"><i className="fab fa-facebook-f"></i></a>
+            <a href="tel:023597010" className="social-icon">
+              <i className="fas fa-phone"></i>
+            </a>
+            <a href="https://wa.me/01018060477" className="social-icon"><i className="fab fa-whatsapp"></i></a>
+            {/* <a href="#!" className="social-icon"><i className="fas fa-envelope"></i></a> */}
+            <a href="https://www.facebook.com/profile.php?id=61583585953989" className="social-icon"><i className="fab fa-facebook-f"></i></a>
           </div>
 
           {/* TEAM CARD */}
@@ -43,11 +54,8 @@ function Footer() {
               
               {/* Logo */}
               <div className="col-5 d-flex justify-content-center">
-                <img
-                  src={codixLogo}
-                  alt="Codix Logo"
-                  className="img-fluid team-logo"
-                />
+                <img className="team-logo" src="/images/Codix-Logo.jpg" />
+
               </div>
 
               {/* Text */}
@@ -61,10 +69,10 @@ function Footer() {
 
                 {/* Team social small */}
                 <div className="d-flex gap-2 mt-2">
-                  <a href="#!" className="social-icon-small"><i className="fab fa-whatsapp"></i></a>
-                  <a href="#!" className="social-icon-small"><i className="fas fa-envelope"></i></a>
-                  <a href="#!" className="social-icon-small"><i className="fab fa-instagram"></i></a>
-                  <a href="#!" className="social-icon-small"><i className="fab fa-facebook-f"></i></a>
+                  <a href="https://wa.me/01016784274" className="social-icon-small"><i className="fab fa-whatsapp"></i></a>
+                  <a href="https://www.linkedin.com/company/codix-tech/" className="social-icon-small"> <i className="fab fa-linkedin"></i></a>
+                  <a href="https://www.instagram.com/codix.tech?igsh=MXZ2Mnd4YnI3cmJtNg==" className="social-icon-small"><i className="fab fa-instagram"></i></a>
+                  {/* <a href="#!" className="social-icon-small"><i className="fab fa-facebook-f"></i></a> */}
                 </div>
               </div>
 
@@ -85,16 +93,29 @@ function Footer() {
             Add the full address of the company here: building, street, city.
           </p>
 
-          <div className="footer-map mt-3">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28549.950296255414!2d31.67742577597444!3d26.560497655508154!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x144f59375b0e09f1%3A0xa33bfcf664c5f2fe!2sSohag%2C%20El-Khouly%2C%20Sohag%201%2C%20Sohag%20Governorate!5e0!3m2!1sen!2seg!4v1764536372589!5m2!1sen!2seg"
-              width="100%"
-              height="350"
-              style={{ border: 0 }}
-              loading="lazy"
-              allowFullScreen
-            ></iframe>
-          </div>
+<div className="footer-map mt-3">
+
+  <div className="map-buttons">
+    <button onClick={() => setMapSrc(location1)} className="map-btn">
+    Location One
+    </button>
+
+    <button onClick={() => setMapSrc(location2)} className="map-btn">
+        Location Two
+    </button>
+  </div>
+
+  <iframe
+    key={mapSrc} 
+    src={mapSrc}
+    width="100%"
+    height="350"
+    style={{ border: 0 }}
+    loading="lazy"
+    allowFullScreen
+  ></iframe>
+</div>
+
         </motion.div>
       </div>
 

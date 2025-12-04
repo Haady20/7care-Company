@@ -1,9 +1,8 @@
 import { useEffect, useState, useRef  } from "react";
+import { Link } from "react-router-dom";
 
 import "./ClientPage.css";
-import logo from "../assets/images/logo.png";
 import About from "../components/About.jsx";
-import Test from "../assets/images/Test.png";
 import Footer from "../components/Footer.jsx";
 
 function ClientPage() {
@@ -52,11 +51,7 @@ useEffect(() => {
   return (
     <div className="page-wrapper">
       <header style={{ opacity: headerOpacity }} className="header">
-        <img 
-          src={logo} 
-          alt="logo" 
-          className="header-logo"
-        />
+              <img className="header-logo" src="/images/logo.png" />
   <div className="hero-content">
     <h2 className="hero-name"><span className="text-dark">{client.job}/ </span>
        {fullName}</h2>
@@ -74,7 +69,7 @@ useEffect(() => {
 <section className="client-info-card">
 
   <div className="client-info-photo">
-    <img src={Test} alt="client" />
+    <img src="/images/Test.png"/>
   </div>
 
   <h3 className="client-info-name">{fullName}</h3>
@@ -112,8 +107,14 @@ useEffect(() => {
   </div>
 
 </section>
+<Link to="/" className="home-btn m-3">
+  <i className="fa-solid fa-house"></i>
+</Link>
+
+
 
 <About/>
+
       <button
         className="scroll-top-btn"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

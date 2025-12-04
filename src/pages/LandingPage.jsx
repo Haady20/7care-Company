@@ -4,28 +4,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./LandingPage.css";
 import Footer from "../components/Footer.jsx";
 import About from "../components/About.jsx";
-import logo from "../assets/images/logo.png";
-import img4 from "../assets/images/img4.jpg";
-import img9 from "../assets/images/img9.jpg";
-import img10 from "../assets/images/img10.jpg";
-import img11 from "../assets/images/img11.jpg";
-import img21 from "../assets/images/img21.jpg";
-import img14 from "../assets/images/img14.jpg";
-import img20 from "../assets/images/img20.jpg";
-import img23 from "../assets/images/img23.jpg";
-import img24 from "../assets/images/img24.png";
-import Slogo1 from "../assets/images/Slogo-1.jpg";
-import Slogo2 from "../assets/images/Slogo-2.jpg";
-import Slogo3 from "../assets/images/Slogo-3.jpg";
-import Slogo4 from "../assets/images/Slogo-4.jpg";
-import Slogo5 from "../assets/images/Slogo-5.jpg";
-import Slogo6 from "../assets/images/Slogo-6.jpg";
-import Slogo7 from "../assets/images/Slogo-7.jpg";
-import Slogo8 from "../assets/images/Slogo-8.jpg";
-import Slogo9 from "../assets/images/Slogo-9.jpg";
-import Slogo10 from "../assets/images/Slogo-10.jpg";
-import Slogo11 from "../assets/images/Slogo-11.jpg";
-import Slogo12 from "../assets/images/Slogo-12.jpg";
 
 const FEATURES = [
   {
@@ -36,7 +14,7 @@ const FEATURES = [
     detailText:
       "هنا هنشرح بالتفصيل الميزة الأولى: إزاي بتفيد العميل، إزاي الشركة بتطبقها، وأي أرقام أو أمثلة تحب تضيفها لاحقًا.",
     imagePosition: "right",
-    image: img4,
+    image: "/images/img4.jpg",
   },
   {
     id: 2,
@@ -46,7 +24,7 @@ const FEATURES = [
     detailText:
       "تفاصيل الميزة الثانية: هنا تكتب الشرح الكامل للمتابعة، أو التقارير، أو أي خدمة أساسية تقدمها الشركة.",
     imagePosition: "left",
-    image: img10,
+    image: "/images/img10.jpg",
   },
   {
     id: 3,
@@ -56,7 +34,7 @@ const FEATURES = [
     detailText:
       "شرح الميزة الثالثة: تكتب هنا مثال عملي، أو سيناريو يوضح للعميل إزاي يستفيد من الميزة في حياته الواقعية.",
     imagePosition: "right",
-    image: img14,
+    image: "/images/img14.jpg",
   },
   {
     id: 4,
@@ -66,7 +44,7 @@ const FEATURES = [
     detailText:
       "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
     imagePosition: "left",
-    image: img23,
+    image: "/images/img23.jpg",
   },
     {
     id: 5,
@@ -76,7 +54,7 @@ const FEATURES = [
     detailText:
       "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
     imagePosition: "right",
-    image: img20,
+    image: "/images/img20.jpg",
   },
       {
     id: 6,
@@ -86,7 +64,7 @@ const FEATURES = [
     detailText:
       "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
     imagePosition: "left",
-    image: img21,
+    image: "/images/img21.jpg",
   },
         {
     id: 7,
@@ -96,7 +74,7 @@ const FEATURES = [
     detailText:
       "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
     imagePosition: "left",
-    image: img9,
+    image: "/images/img9.jpg",
   },
         {
     id: 8,
@@ -106,7 +84,7 @@ const FEATURES = [
     detailText:
       "تفاصيل الميزة الرابعة: ممكن تكون خدمة خاصة، برنامج ولاء، متابعة شخصية، أو أي نقطة قوة تحب توضحها.",
     imagePosition: "right",
-    image: img11,
+    image: "/images/img11.jpg",
   },
 ];
 
@@ -129,7 +107,7 @@ const detailsRef = useRef(null);
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <img src={logo} alt="Company Logo" className="hero-logo-img" />
+      <img className="hero-logo-img " src="/images/logo.png" alt="" />
           </motion.div>
 
           <motion.div
@@ -163,11 +141,6 @@ const detailsRef = useRef(null);
       هنا هنكتب سطر تمهيدي بسيط يعرّف العميل إن دي أهم النقاط اللي
       بتميز الشركة والخدمات اللي هتستفيد منها لما تتعامل معانا.
     </p>
-
-    {/* نعمل ref لمكان التفاصيل */}
-    {/** IMPORTANT **/}
-    const detailsRef = useRef(null);
-
     <div className="row g-3 mb-4">
       {FEATURES.map((feature) => {
         const isActive = feature.id === selectedFeatureId;
@@ -182,7 +155,6 @@ const detailsRef = useRef(null);
               onClick={() => {
                 setSelectedFeatureId(feature.id);
 
-                // ننزل تلقائي بعد ما التفاصيل تتعمل render
                 setTimeout(() => {
                   detailsRef.current?.scrollIntoView({
                     behavior: "smooth",
@@ -219,7 +191,6 @@ const detailsRef = useRef(null);
       })}
     </div>
 
-    {/* DETAILS SECTION */}
     {selectedFeature && (
       <div ref={detailsRef} className="feature-details card mt-4">
         <div className="card-body">
@@ -273,7 +244,6 @@ const detailsRef = useRef(null);
   </div>
 </section>
 
-
 <section className="logos-section">
   <h2 className="section-title text-center mb-3">شركاء النجاح والجهات المتعاقدة</h2>
   <p className="section-text text-center mb-4">
@@ -281,20 +251,40 @@ const detailsRef = useRef(null);
   </p>
 
   <div className="logos-container">
-    <div className="track">
-      {[
-        Slogo1, Slogo3, Slogo5, Slogo6, Slogo7, Slogo8, Slogo9, Slogo10, Slogo11,
-        Slogo4, Slogo2, Slogo12,
+<div className="track">
+  {[
+    "/images/Slogo-1.jpg",
+    "/images/Slogo-2.jpg",
+    "/images/Slogo-3.jpg",
+    "/images/Slogo-4.jpg",
+    "/images/Slogo-5.jpg",
+    "/images/Slogo-6.jpg",
+    "/images/Slogo-7.jpg",
+    "/images/Slogo-8.jpg",
+    "/images/Slogo-9.jpg",
+    "/images/Slogo-10.jpg",
+    "/images/Slogo-11.jpg",
+    "/images/Slogo-12.jpg",
 
-        // تكرار لضمان الحركة اللانهائية
-        Slogo1, Slogo3, Slogo5, Slogo6, Slogo7, Slogo8, Slogo9, Slogo10, Slogo11,
-        Slogo4, Slogo2, Slogo12
-      ].map((img, i) => (
-        <span key={i} className="logo-item">
-          <img src={img} alt="partner" />
-        </span>
-      ))}
-    </div>
+    "/images/Slogo-1.jpg",
+    "/images/Slogo-2.jpg",
+    "/images/Slogo-3.jpg",
+    "/images/Slogo-4.jpg",
+    "/images/Slogo-5.jpg",
+    "/images/Slogo-6.jpg",
+    "/images/Slogo-7.jpg",
+    "/images/Slogo-8.jpg",
+    "/images/Slogo-9.jpg",
+    "/images/Slogo-10.jpg",
+    "/images/Slogo-11.jpg",
+    "/images/Slogo-12.jpg",
+  ].map((img, i) => (
+    <span key={i} className="logo-item">
+      <img src={img} alt="partner" />
+    </span>
+  ))}
+</div>
+
   </div>
 </section>
 

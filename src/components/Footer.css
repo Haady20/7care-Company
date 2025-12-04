@@ -38,8 +38,10 @@
 }
 
 .team-card {
+  position: static;
   border-radius: 14px !important;
   background: linear-gradient(to bottom, #111, #1b1b1b);
+  z-index: 9;
 }
 
 .team-logo {
@@ -73,4 +75,28 @@
 .footer-map iframe {
   border-radius: 12px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.map-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.map-btn {
+  background: #1b4f92;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.map-btn:hover {
+  background: #163f75;
+  transform: translateY(-2px);
 }
