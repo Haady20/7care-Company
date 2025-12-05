@@ -248,7 +248,7 @@ width: 185px;
   object-fit: cover;
 }
 
-.logos-section {
+/* .logos-section {
   width: 100vw;
   padding: 70px 0;
   background-color: #5b5b5b;
@@ -333,7 +333,7 @@ width: 185px;
   display: inline-flex;
   align-items: center;
   gap: 60px;
-  animation: slide 40s linear infinite;
+  animation: slide 10s linear infinite;
   white-space: nowrap;
   will-change: transform;
 }
@@ -360,7 +360,63 @@ width: 185px;
   filter: grayscale(0) brightness(1);
   transform: scale(1.08) translateY(-5px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+} */
+.logos-section{
+padding: 50px 0;
+  background-color: #555;
 }
+.logos-container {
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #ededed;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.track {
+  display: flex;
+  gap: 40px;
+  animation: slideReset 120s linear infinite;
+  will-change: transform;
+}
+
+@keyframes slideReset {
+  0% {
+    transform: translateX(100%);   /* يبدأ من اليمين */
+  }
+  90% {
+    transform: translateX(-120%);  /* يختفي شمال */
+  }
+  90.01% {
+    transform: translateX(-120%);   /* يبدأ من اليمين بدون هزة */
+  }
+  100% {
+    transform: translateX(100%);   /* يثبت لحظة صغيرة قبل التكرار */
+  }
+}
+
+.logo-item {
+  background: #fff;
+  padding: 20px;
+  border-radius: 22px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-item img {
+  width: auto;
+  height: 90px;   /* أكبر */
+  object-fit: contain;
+  transition: 0.3s ease;
+}
+
+.logo-item:hover img {
+  transform: scale(1.1);
+}
+
 
 @keyframes slide {
   0% { 
