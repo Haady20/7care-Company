@@ -100,7 +100,6 @@ function LandingPage() {
   const selectedFeature = FEATURES.find((f) => f.id === selectedFeatureId);
   const detailsRef = useRef(null);
 
-  // قائمة الشعارات
   const logos = [
     "/images/Slogo-1.jpg",
     "/images/Slogo-2.jpg",
@@ -305,7 +304,6 @@ function LandingPage() {
                 <img src={logo} alt={`partner-${index}`} loading="lazy" />
               </span>
             ))}
-            {/* المجموعة الثانية - نسخة طبق الأصل */}
             {logos.map((logo, index) => (
               <span key={`second-${index}`} className="logo-item">
                 <img src={logo} alt={`partner-${index}`} loading="lazy" />
