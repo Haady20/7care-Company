@@ -100,7 +100,6 @@ function LandingPage() {
   const selectedFeature = FEATURES.find((f) => f.id === selectedFeatureId);
   const detailsRef = useRef(null);
 
-  // قائمة الشعارات
   const logos = [
     "/images/Slogo-1.jpg",
     "/images/Slogo-2.jpg",
