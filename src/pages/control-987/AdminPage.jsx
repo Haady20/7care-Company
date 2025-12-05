@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import ClientsTable from "../../components/ClientsTable";
 import ClientActionsPanel from "../../components/ClientActionsPanel";
+import { listClients } from "../../api/clientApi";
 import "../../styles/admin.css";
 
 
@@ -19,34 +20,40 @@ function AdminPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [jobFilter, setJobFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [selectedClient, setSelectedClient] = useState(null);
   const [currentAction, setCurrentAction] = useState(null);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Load mock data
+  // Fetch one page from the server
   useEffect(() => {
-    async function loadMockData() {
+    let cancelled = false;
+    async function run() {
       try {
         setLoading(true);
-        const res = await fetch("/db.json");
-        const data = await res.json();
-        const mapped = (data.clients || []).map(mapApiClientToUi);
-        setClients(mapped);
-      } catch (err) {
-        console.error("Mock load error:", err);
-        setError("Failed to load mock clients");
+        setError(null);
+        const { data, totalPages: apiTotalPages } = await listClients({
+          page: currentPage,
+          pageSize: ITEMS_PER_PAGE,
+        });
+        if (!cancelled) {
+          setClients(data.map(mapApiClientToUi));
+          setTotalPages(apiTotalPages || 1);
+        }
+      } catch (e) {
+        if (!cancelled) setError(e.message || "Failed to load clients");
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }
+    run();
+    return () => { cancelled = true; };
+  }, [currentPage]);
 
-    loadMockData();
-  }, []);
-
-  // Filter
+  // Optional client-side filtering for current page results
   const filteredClients = useMemo(() => {
     return clients.filter((client) => {
       const fullName = `${client.firstName || ""} ${
@@ -59,13 +66,6 @@ function AdminPage() {
       return matchesName && matchesJob;
     });
   }, [clients, searchTerm, jobFilter]);
-
-  const totalPages = Math.ceil(filteredClients.length / ITEMS_PER_PAGE) || 1;
-
-  const paginatedClients = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredClients.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredClients, currentPage]);
 
   // Handlers
   const handleSearchChange = (value) => {
@@ -219,7 +219,7 @@ function AdminPage() {
         <section className="admin-content">
           <div className="admin-card card-shadow">
             <ClientsTable
-              clients={paginatedClients}
+              clients={filteredClients}
               jobs={JOBS}
               searchTerm={searchTerm}
               onSearchChange={handleSearchChange}

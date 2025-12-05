@@ -1,9 +1,9 @@
 // src/api/clientApi.js
 
-// 👇 point this to your backend
-// you can override it with REACT_APP_API_BASE_URL in .env if you like
+// 👇 API base URL is loaded from .env file (REACT_APP_API_BASE_URL)
+// Default fallback is http://localhost if not set
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+  process.env.REACT_APP_API_BASE_URL ;
 
 const CLIENTS_BASE = `${API_BASE_URL}/api/clients`;
 
@@ -22,22 +22,33 @@ export const clientApiUrls = {
 
 // Small helper for fetch
 async function handleResponse(response) {
-  if (!response.ok) {
-    const text = await response.text();
-    try {
-      const data = JSON.parse(text);
-      throw new Error(data.message || "Request failed");
-    } catch {
-      throw new Error(text || "Request failed");
-    }
-  }
-
   // DELETE returns 204 with empty body
   if (response.status === 204) {
     return null;
   }
 
+  if (!response.ok) {
+    const text = await response.text();
+    try {
+      const data = JSON.parse(text);
+      throw new Error(data.message || `Request failed: ${response.status}`);
+    } catch (e) {
+      if (e instanceof SyntaxError) {
+        throw new Error(`Request failed: ${response.status} - ${text}`);
+      }
+      throw e;
+    }
+  }
+
   return response.json();
+}
+
+// ---- Paginated list call ----
+
+export async function listClients({ page = 1, pageSize = 20 } = {}) {
+  const qs = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
+  const res = await fetch(`${clientApiUrls.listClients}?${qs.toString()}`);
+  return handleResponse(res);
 }
 
 // ---- CRUD + QR helpers ----
