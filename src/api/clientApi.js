@@ -1,9 +1,9 @@
 // src/api/clientApi.js
 
-// 👇 point this to your backend
-// you can override it with REACT_APP_API_BASE_URL in .env if you like
+// 👇 API base URL is loaded from .env file (REACT_APP_API_BASE_URL)
+// Default fallback is http://localhost if not set
 const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+  process.env.REACT_APP_API_BASE_URL ;
 
 const CLIENTS_BASE = `${API_BASE_URL}/api/clients`;
 
