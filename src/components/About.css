@@ -26,3 +26,63 @@
   display: block;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
+
+.section-title {
+  font-weight: 700;
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.section-text {
+  color: #e8e8e8;
+  font-size: 1.1rem;
+  line-height: 1.9;
+  margin-bottom: 18px;
+}
+
+.highlight {
+  color: #4fd1c5; /* لون تركوازي لطيف */
+  font-weight: 600;
+}
+
+.about-list {
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.about-list .list-title {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.about-list ul {
+  padding-left: 20px;
+  list-style: none;
+}
+
+.about-list ul li {
+  color: #dcdcdc;
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+  position: relative;
+  padding-left: 22px;
+}
+
+.about-list ul li::before {
+  content: "•";
+  color: #4fd1c5;
+  font-size: 1.4rem;
+  position: absolute;
+  left: 0;
+  top: -4px;
+}
+
+.final-line {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 25px;
+  color: #fff;
+}

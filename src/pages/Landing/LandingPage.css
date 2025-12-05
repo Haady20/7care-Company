@@ -1,5 +1,6 @@
 html {
   scroll-behavior: smooth;
+  direction: rtl;
 }
 body{
   background-color: #ffc75bf5;
@@ -23,7 +24,7 @@ a{
 .landing-hero {
   position: relative;
   height: 100vh;
-  background-image: url(../assets/header-bg.png);
+  background-image: url(../../assets/header-bg.png);
   background-size: cover;
   background-position: top center;
   background-repeat: no-repeat;
@@ -121,7 +122,6 @@ position: relative;
     font-size: 2.8rem;
     font-weight: 700;
     margin-bottom: 2rem;
-    text-align: end;
     color: white;
 }
 
@@ -176,7 +176,7 @@ width: 185px;
 
 .feature-card-vertical {
   flex: 0.6;
-  height: 64px;
+  height: 190px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -184,7 +184,7 @@ width: 185px;
 }
 
 .feature-vertical-text {
-  font-size: 0.75rem;
+  font-size: large;
   font-weight: 600;
   color: #555;
   transform: translateX(18px) rotate(-90deg);
@@ -195,7 +195,7 @@ width: 185px;
 }
 
 .feature-card-title {
-  font-size: 0.95rem;
+  font-size: 1.2rem;
   font-weight: 600;
   margin: 0;
   text-align: center;
@@ -224,13 +224,13 @@ width: 185px;
 }
 
 .feature-detail-title {
-  font-size: 1.3rem;
+  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.6rem;
 }
 
 .feature-detail-text {
-  font-size: 0.98rem;
+  font-size: 1.3rem;
   margin-bottom: 0.45rem;
   line-height: 1.7;
 }
@@ -333,7 +333,7 @@ width: 185px;
   display: inline-flex;
   align-items: center;
   gap: 60px;
-  animation: slide 34.5s linear infinite;
+  animation: slide 40s linear infinite;
   white-space: nowrap;
   will-change: transform;
 }
@@ -363,8 +363,47 @@ width: 185px;
 }
 
 @keyframes slide {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  0% { 
+    transform: translateX(0); 
+  }
+  100% { 
+    transform: translateX(-50%); 
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .logos-section {
+    padding: 50px 0;
+  }
+  
+  .logos-container {
+    margin: 30px auto;
+  }
+  
+  .track {
+    gap: 40px;
+    animation-duration: 35s;
+  }
+  
+  .logo-item img {
+    width: 120px;
+  }
+  
+  .logos-container::before,
+  .logos-container::after {
+    width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .track {
+    gap: 30px;
+  }
+  
+  .logo-item img {
+    width: 100px;
+  }
 }
 
 /* Responsive adjustments */
@@ -420,11 +459,12 @@ width: 185px;
   }
 
   .hero-logo-img {
-        width: 500px;
+        width: 350px;
         position: relative;
-        top: 265px;
-        left: -90px;
-  animation: fadeBg 3s ease-out forwards;
+top: 305px;
+        left: 5px;
+        opacity: 1;
+        animation: fadeBg 3s ease-out forwards
 
   }
 
@@ -485,5 +525,8 @@ width: 185px;
 
   .team-card {
     margin: auto;
+  }
+  .feature-detail-image{
+    display: none;
   }
 }

@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef  } from "react";
+
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 import "./ClientPage.css";
-import About from "../components/About.jsx";
-import Footer from "../components/Footer.jsx";
+import About from "../../components/About.jsx";
+import Footer from "../../components/Footer.jsx";
 
 function ClientPage() {
   const [client, setClient] = useState(null);
@@ -85,7 +86,7 @@ useEffect(() => {
   </h2>
 
   <p className="strip-subtitle">
-    صحتك في أمان <span className="heart-icon">❤️</span>  
+    صحتك في أمان 
     مع نخبة من أفضل الأطباء
   </p>
 
@@ -140,11 +141,9 @@ useEffect(() => {
   </div>
 
 </section>
-<Link to="/" className="home-btn m-3">
+<Link to="/landing" className="home-btn m-3">
   <i className="fa-solid fa-house"></i>
 </Link>
-
-
 
 <About/>
 
@@ -152,7 +151,7 @@ useEffect(() => {
         className="scroll-top-btn"
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
-        ↑
+        UP
       </button>
   <Footer/>
     </div>

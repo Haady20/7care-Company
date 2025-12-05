@@ -38,6 +38,8 @@
 }
 
 .team-card {
+  direction: ltr;
+  
   position: static;
   border-radius: 14px !important;
   background: linear-gradient(to bottom, #111, #1b1b1b);

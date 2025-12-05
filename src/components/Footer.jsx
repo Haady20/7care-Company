@@ -24,10 +24,9 @@ const location2 =
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <h4 className="footer-title">Feedback & Complaints</h4>
+          <h4 className="footer-title">الشكاوى والمقترحات</h4>
           <p className="footer-text">
-            For any complaints, suggestions, or service inquiries, feel free to
-            contact our team anytime.
+            في حال وجود أي شكوى أو اقتراح أو استفسار حول خدماتنا، يسعدنا التواصل معكم في أي وقت.
           </p>
 
           {/* Social icons */}
@@ -35,12 +34,15 @@ const location2 =
             <a href="tel:023597010" className="social-icon">
               <i className="fas fa-phone"></i>
             </a>
-            <a href="https://wa.me/01018060477" className="social-icon"><i className="fab fa-whatsapp"></i></a>
-            {/* <a href="#!" className="social-icon"><i className="fas fa-envelope"></i></a> */}
-            <a href="https://www.facebook.com/profile.php?id=61583585953989" className="social-icon"><i className="fab fa-facebook-f"></i></a>
+            <a href="https://wa.me/01018060477" className="social-icon">
+              <i className="fab fa-whatsapp"></i>
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=61583585953989" className="social-icon">
+              <i className="fab fa-facebook-f"></i>
+            </a>
           </div>
 
-          {/* TEAM CARD */}
+          {/* TEAM CARD — KEEP EXACT ENGLISH CONTENT */}
           <motion.div
             className="team-card card bg-dark text-white border-0 shadow rounded-4 p-3 mt-5"
             initial={{ opacity: 0, y: 35 }}
@@ -49,14 +51,13 @@ const location2 =
             transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
           >
             <div className="row g-0 align-items-center">
-              
+
               {/* Logo */}
               <div className="col-5 d-flex justify-content-center">
                 <img className="team-logo" src="/images/Codix-Logo.jpg" />
-
               </div>
 
-              {/* Text */}
+              {/* Text (English — unchanged) */}
               <div className="col-7 ps-2">
                 <h5 className="fw-bold mb-1">
                   Developed by <span className="text-info">Codix</span>
@@ -65,10 +66,9 @@ const location2 =
                   Delivering modern and elegant digital solutions.
                 </p>
 
-                {/* Team social small */}
                 <div className="d-flex gap-2 mt-2">
                   <a href="https://wa.me/01016784274" className="social-icon-small"><i className="fab fa-whatsapp"></i></a>
-                  <a href="https://www.linkedin.com/company/codix-tech/" className="social-icon-small"> <i className="fab fa-linkedin"></i></a>
+                  <a href="https://www.linkedin.com/company/codix-tech/" className="social-icon-small"><i className="fab fa-linkedin"></i></a>
                   <a href="https://www.instagram.com/codix.tech?igsh=MXZ2Mnd4YnI3cmJtNg==" className="social-icon-small"><i className="fab fa-instagram"></i></a>
                   <a href="https://www.facebook.com/share/1CS6U1visH/?mibextid=wwXIfr" className="social-icon-small"><i className="fab fa-facebook-f"></i></a>
                 </div>
@@ -76,9 +76,11 @@ const location2 =
 
             </div>
           </motion.div>
+
         </motion.div>
       </div>
 
+      {/* RIGHT SIDE */}
       <div className="col-lg-5">
         <motion.div
           initial={{ opacity: 0, x: 25 }}
@@ -86,33 +88,34 @@ const location2 =
           viewport={{ once: true }}
           transition={{ duration: 0.7, ease: "easeOut" }}
         >
-          <h5 className="footer-subtitle">Address</h5>
+          <h5 className="footer-subtitle">العنوان</h5>
           <p className="footer-text">
-            Add the full address of the company here: building, street, city.
+            يسعدنا استقبالكم في مقرّنا الرئيسي من خلال العنوان الموضّح أدناه لخدمتكم والإجابة عن استفساراتكم.
           </p>
 
-<div className="footer-map mt-3">
+          <div className="footer-map mt-3">
 
-  <div className="map-buttons">
-    <button onClick={() => setMapSrc(location1)} className="map-btn">
-    Location One
-    </button>
+            <div className="map-buttons">
+              <button onClick={() => setMapSrc(location1)} className="map-btn">
+                الموقع الأول
+              </button>
 
-    <button onClick={() => setMapSrc(location2)} className="map-btn">
-        Location Two
-    </button>
-  </div>
+              <button onClick={() => setMapSrc(location2)} className="map-btn">
+                الموقع الثاني
+              </button>
+            </div>
 
-  <iframe
-    key={mapSrc} 
-    src={mapSrc}
-    width="100%"
-    height="350"
-    style={{ border: 0 }}
-    loading="lazy"
-    allowFullScreen
-  ></iframe>
-</div>
+            <iframe
+              key={mapSrc}
+              src={mapSrc}
+              width="100%"
+              height="350"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+            ></iframe>
+
+          </div>
 
         </motion.div>
       </div>
@@ -120,6 +123,7 @@ const location2 =
     </div>
   </div>
 </footer>
+
   );
 }
 
