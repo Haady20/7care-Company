@@ -8,7 +8,7 @@ function App() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
       {/* <Route path="/" element={<ClientPage />} /> */}
-      {/* <Route path="/control-987" element={<AdminPage />} /> */}
+      <Route path="/control-987" element={<AdminPage />} />
     </Routes>
   );
 }
