@@ -304,7 +304,6 @@ function LandingPage() {
                 <img src={logo} alt={`partner-${index}`} loading="lazy" />
               </span>
             ))}
-            {/* المجموعة الثانية - نسخة طبق الأصل */}
             {logos.map((logo, index) => (
               <span key={`second-${index}`} className="logo-item">
                 <img src={logo} alt={`partner-${index}`} loading="lazy" />
