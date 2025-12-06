@@ -32,16 +32,19 @@ function ClientPage() {
     async function load() {
       try {
         const data = await getClientByQrToken(qrToken);
-        // Handle both wrapped and unwrapped responses
-        setClient(data.client || data);
+        // API returns { client, profileUrl }
+        // Extract the client object (it may also be directly the client for backward compat)
+        const clientData = data?.client || data;
+        setClient(clientData);
       } catch (err) {
+        console.error("Failed to fetch client:", err);
         setError("Client not found");
       } finally {
         setLoading(false);
       }
     }
 
-    load();
+    if (qrToken) load();
   }, [qrToken]);
 
   if (loading) return <div className="loading">Loading...</div>;

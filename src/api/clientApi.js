@@ -23,10 +23,10 @@ export async function listClients({ page = 1, pageSize = 20 } = {}) {
   return res.data;
 }
 
-// If you have a client-by-token route on the backend, adjust the path:
+// Fetch client by QR token (called when QR code is scanned)
 export async function getClientByQrToken(qrToken) {
-  // Example: /clients/qr/:qrToken  (rename if your backend differs)
-  const res = await api.get(`/clients/qr/${encodeURIComponent(qrToken)}`);
+  // Returns { client, profileUrl }
+  const res = await api.get(`/clients/by-qr/${encodeURIComponent(qrToken)}`);
   return res.data;
 }
 

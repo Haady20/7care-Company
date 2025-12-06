@@ -3,20 +3,17 @@ import { createClient } from "../api/clientApi";
 
 const initial = {
   clientName: "",
+  jobTitle: "",
+  address: "",
+  complaintsAndSuggestions: "",
   logo: "",
   image: "",
-  firstName: "",
-  lastName: "",
   nationalId: "",
-  jobTitle: "",
-  organization: "",
+  // keep the toggles/date if you still use them:
   serviceOne: false,
   serviceTwo: false,
   serviceThree: false,
-  expiryDate: "", // HTML date input -> "YYYY-MM-DD"
-  address: "",
-  googleMapLocation: "",
-  complaintsAndSuggestions: "",
+  expiryDate: "",
 };
 
 export default function CreateClientModal({ show, onClose, onCreated }) {
@@ -34,10 +31,7 @@ export default function CreateClientModal({ show, onClose, onCreated }) {
     }
   }, [show]);
 
-  const canSubmit = useMemo(() => {
-    // Minimal required fields (tweak as you like)
-    return form.clientName.trim().length > 0 || (form.firstName.trim() && form.lastName.trim());
-  }, [form]);
+  const canSubmit = useMemo(() => Boolean(form.clientName?.trim()), [form.clientName]);
 
   const update = (k, v) => setForm((s) => ({ ...s, [k]: v }));
 
@@ -48,10 +42,19 @@ export default function CreateClientModal({ show, onClose, onCreated }) {
     setSubmitting(true);
     setError("");
 
-    // convert empty strings to undefined so backend can ignore
+    // build a clean payload: never send firstName/lastName, convert "" -> undefined and drop empty keys
     const payload = Object.fromEntries(
-      Object.entries(form).map(([k, v]) => [k, v === "" ? undefined : v])
+      Object.entries(form)
+        .filter(([k]) => !["firstName", "lastName"].includes(k))
+        .map(([k, v]) => [k, v === "" ? undefined : v])
+        .filter(([_, v]) => v !== undefined)
     );
+
+    if (!payload.clientName?.trim()) {
+      setError("clientName is required");
+      setSubmitting(false);
+      return;
+    }
 
     try {
       const data = await createClient(payload);
@@ -92,119 +95,88 @@ export default function CreateClientModal({ show, onClose, onCreated }) {
                 {error && <div className="alert alert-danger">{error}</div>}
 
                 <div className="col-12">
-                  <label className="form-label">Client Name</label>
+                  <label htmlFor="clientName" className="form-label fw-bold">
+                    Client name <span className="text-danger">*</span>
+                  </label>
                   <input
+                    id="clientName"
+                    name="clientName"
+                    type="text"
                     className="form-control"
                     value={form.clientName}
-                    onChange={(e) => update("clientName", e.target.value)}
-                    placeholder="Acme Corp"
+                    onChange={(e) => setForm((f) => ({ ...f, clientName: e.target.value }))}
+                    required
+                    autoFocus
+                    placeholder="e.g., Acme Corp"
                   />
                 </div>
 
-                <div className="col-md-6">
-                  <label className="form-label">First Name</label>
-                  <input
-                    className="form-control"
-                    value={form.firstName}
-                    onChange={(e) => update("firstName", e.target.value)}
-                    placeholder="John"
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label">Last Name</label>
-                  <input
-                    className="form-control"
-                    value={form.lastName}
-                    onChange={(e) => update("lastName", e.target.value)}
-                    placeholder="Doe"
-                  />
-                </div>
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <label className="form-label">Job title</label>
+                    <input className="form-control"
+                      value={form.jobTitle}
+                      onChange={(e) => setForm((f) => ({ ...f, jobTitle: e.target.value }))}
+                      placeholder="e.g., Manager"
+                    />
+                  </div>
 
-                <div className="col-md-6">
-                  <label className="form-label">Job Title</label>
-                  <input
-                    className="form-control"
-                    value={form.jobTitle}
-                    onChange={(e) => update("jobTitle", e.target.value)}
-                    placeholder="Manager"
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label">Organization</label>
-                  <input
-                    className="form-control"
-                    value={form.organization}
-                    onChange={(e) => update("organization", e.target.value)}
-                    placeholder="Acme Corp"
-                  />
-                </div>
+                  <div className="col-md-6">
+                    <label className="form-label">Address</label>
+                    <input className="form-control"
+                      value={form.address}
+                      onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+                      placeholder="123 Main St"
+                    />
+                  </div>
 
-                <div className="col-md-6">
-                  <label className="form-label">National ID</label>
-                  <input
-                    className="form-control"
-                    value={form.nationalId}
-                    onChange={(e) => update("nationalId", e.target.value)}
-                    placeholder="12345678901234"
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label">Expiry Date</label>
-                  <input
-                    type="date"
-                    className="form-control"
-                    value={form.expiryDate}
-                    onChange={(e) => update("expiryDate", e.target.value)}
-                  />
-                </div>
+                  <div className="col-12">
+                    <label className="form-label">Complaints & suggestions</label>
+                    <textarea className="form-control"
+                      value={form.complaintsAndSuggestions}
+                      onChange={(e) => setForm((f) => ({ ...f, complaintsAndSuggestions: e.target.value }))}
+                      rows={2}
+                      placeholder="How can we help?"
+                    />
+                  </div>
 
-                <div className="col-md-6">
-                  <label className="form-label">Logo URL</label>
-                  <input
-                    className="form-control"
-                    value={form.logo}
-                    onChange={(e) => update("logo", e.target.value)}
-                    placeholder="https://example.com/logo.png"
-                  />
-                </div>
-                <div className="col-md-6">
-                  <label className="form-label">Image URL</label>
-                  <input
-                    className="form-control"
-                    value={form.image}
-                    onChange={(e) => update("image", e.target.value)}
-                    placeholder="https://example.com/photo.png"
-                  />
-                </div>
+                  <div className="col-md-6">
+                    <label className="form-label">Logo URL</label>
+                    <input className="form-control"
+                      value={form.logo}
+                      onChange={(e) => setForm((f) => ({ ...f, logo: e.target.value }))}
+                      placeholder="https://…/logo.png"
+                    />
+                  </div>
 
-                <div className="col-12">
-                  <label className="form-label">Address</label>
-                  <input
-                    className="form-control"
-                    value={form.address}
-                    onChange={(e) => update("address", e.target.value)}
-                    placeholder="123 Main St"
-                  />
-                </div>
+                  <div className="col-md-6">
+                    <label className="form-label">Image URL</label>
+                    <input className="form-control"
+                      value={form.image}
+                      onChange={(e) => setForm((f) => ({ ...f, image: e.target.value }))}
+                      placeholder="https://…/photo.png"
+                    />
+                  </div>
 
-                <div className="col-12">
-                  <label className="form-label">Google Map Location URL</label>
-                  <input
-                    className="form-control"
-                    value={form.googleMapLocation}
-                    onChange={(e) => update("googleMapLocation", e.target.value)}
-                    placeholder="https://maps.google.com/?q=123+Main+St"
-                  />
-                </div>
+                  <div className="col-md-6">
+                    <label className="form-label">National ID (optional)</label>
+                    <input className="form-control"
+                      value={form.nationalId}
+                      onChange={(e) => setForm((f) => ({ ...f, nationalId: e.target.value }))}
+                      placeholder="14 digits (optional)"
+                      inputMode="numeric"
+                    />
+                  </div>
 
-                <div className="col-12">
-                  <label className="form-label">Complaints & Suggestions</label>
-                  <textarea
-                    className="form-control"
-                    rows={2}
-                    value={form.complaintsAndSuggestions}
-                    onChange={(e) => update("complaintsAndSuggestions", e.target.value)}
-                  />
+                  <div className="col-md-6">
+                    <label className="form-label">Expiry Date</label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      value={form.expiryDate}
+                      onChange={(e) => setForm((f) => ({ ...f, expiryDate: e.target.value }))}
+                    />
+                  </div>
                 </div>
 
                 <div className="col-12 d-flex gap-3">

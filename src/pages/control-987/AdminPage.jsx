@@ -1,12 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ClientsTable from "../../components/ClientsTable";
-import { listClients, deleteClient, createClient } from "../../api/clientApi";
+import { listClients, deleteClient } from "../../api/clientApi";
 import "../../styles/admin.css";
 
 const JOBS = ["All", "Doctor", "Engineer", "Accountant"];
 const ITEMS_PER_PAGE = 20;
 
+const SAMPLE = {
+  clientName: "Acme weCorp",
+  logo: "https://exampl2e.com/logo.png",
+  image: "https://exam2ple.com/photo.png",
+  firstName: "2John",
+  lastName: "Do2e",
+  nationalId: "12345672823139",
+  jobTitle: "Manager",
+  organization: "A2cme Corp",
+  serviceOne: true,
+  serviceTwo: false,
+  serviceThree: true,
+  expiryDate: "2026-12-31",
+  address: "123 2Main St",
+  googleMapLocation: "https://maps.google.com/?q=123+Main+St",
+  complaintsAndSuggestions: "Call support hotline",
+};
+
 function AdminPage() {
+  const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -14,11 +34,7 @@ function AdminPage() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [jobFilter, setJobFilter] = useState("All");
-  const [showQuickAdd, setShowQuickAdd] = useState(false);
-  const [quickFirst, setQuickFirst] = useState("");
-  const [quickLast, setQuickLast] = useState("");
-  const [quickClientName, setQuickClientName] = useState("");
-  const [creating, setCreating] = useState(false);
+  // Quick-add removed in favor of full form route
 
   const load = async (p = 1) => {
     setLoading(true);
@@ -66,34 +82,8 @@ function AdminPage() {
     }
   };
 
-  const handleQuickCreate = async () => {
-    if (creating) return;
-    const payload = {
-      firstName: quickFirst.trim() || undefined,
-      lastName: quickLast.trim() || undefined,
-      clientName: quickClientName.trim() || undefined,
-    };
-
-    // Require at least one name field
-    if (!payload.firstName && !payload.lastName && !payload.clientName) return;
-
-    setCreating(true);
-    try {
-      await createClient(payload);
-      // Optionally you could inspect returned data; here we just reload
-      await load(page);
-      // reset quick add
-      setQuickFirst("");
-      setQuickLast("");
-      setQuickClientName("");
-      setShowQuickAdd(false);
-    } catch (err) {
-      console.error("Quick create failed:", err);
-      // In a richer UI we would surface an error toast; keeping simple for now
-    } finally {
-      setCreating(false);
-    }
-  };
+  // navigate to client form with a SAMPLE prefill
+  const goToFormPrefilled = () => navigate("/clients/new", { state: { prefill: SAMPLE } });
 
   return (
     <div className="container py-4">
@@ -119,67 +109,12 @@ function AdminPage() {
               </option>
             ))}
           </select>
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowQuickAdd((s) => !s)}
-          >
-            {showQuickAdd ? "Close" : "+ Add Client"}
+          <button className="btn btn-primary" onClick={goToFormPrefilled}>
+            + Add Client
           </button>
         </div>
       </header>
-
-      {showQuickAdd && (
-        <div className="card mb-3">
-          <div className="card-body">
-            <div className="row g-2 align-items-center">
-              <div className="col-md-4">
-                <input
-                  className="form-control"
-                  placeholder="Client name (optional)"
-                  value={quickClientName}
-                  onChange={(e) => setQuickClientName(e.target.value)}
-                />
-              </div>
-              <div className="col-md-3">
-                <input
-                  className="form-control"
-                  placeholder="First name"
-                  value={quickFirst}
-                  onChange={(e) => setQuickFirst(e.target.value)}
-                />
-              </div>
-              <div className="col-md-3">
-                <input
-                  className="form-control"
-                  placeholder="Last name"
-                  value={quickLast}
-                  onChange={(e) => setQuickLast(e.target.value)}
-                />
-              </div>
-              <div className="col-md-2 d-flex gap-2">
-                <button
-                  className="btn btn-gold"
-                  disabled={creating || (!quickClientName && !quickFirst && !quickLast)}
-                  onClick={handleQuickCreate}
-                >
-                  {creating ? "Creating..." : "Create"}
-                </button>
-                <button
-                  className="btn btn-outline-secondary"
-                  onClick={() => {
-                    setQuickFirst("");
-                    setQuickLast("");
-                    setQuickClientName("");
-                    setShowQuickAdd(false);
-                  }}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Quick-add removed; Add Client now opens full form at /clients/new */}
 
       {loading ? (
         <div className="text-center py-5">Loading…</div>
