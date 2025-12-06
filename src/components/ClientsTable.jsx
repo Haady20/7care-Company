@@ -7,6 +7,7 @@ function ClientsTable({
   onJobFilterChange,
   currentPage,
   totalPages,
+  itemsPerPage,  // ✅ مهم للحساب الصحيح
   onPageChange,
   onAddClick,
   onEditClick,
@@ -27,12 +28,12 @@ function ClientsTable({
 
   return (
     <div className="clients-wrapper">
-      {/* Top toolbar */}
+      
+      {/* Toolbar */}
       <div className="clients-toolbar">
+        
         <div className="clients-search-group">
-          <label className="form-label mb-1 small text-muted">
-            Search by name
-          </label>
+          <label className="form-label mb-1 small text-muted">Search by name</label>
           <input
             type="text"
             className="form-control clients-search-input"
@@ -43,18 +44,14 @@ function ClientsTable({
         </div>
 
         <div className="clients-filter-group">
-          <label className="form-label mb-1 small text-muted">
-            Filter by job
-          </label>
+          <label className="form-label mb-1 small text-muted">Filter by job</label>
           <select
             className="form-select clients-filter-select"
             value={jobFilter}
             onChange={handleJobChange}
           >
             {jobs.map((job) => (
-              <option key={job} value={job}>
-                {job}
-              </option>
+              <option key={job} value={job}>{job}</option>
             ))}
           </select>
         </div>
@@ -64,6 +61,7 @@ function ClientsTable({
             + Add Client
           </button>
         </div>
+
       </div>
 
       {/* Table */}
@@ -78,6 +76,7 @@ function ClientsTable({
               <th className="text-end">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {clients.length === 0 ? (
               <tr>
@@ -88,29 +87,32 @@ function ClientsTable({
             ) : (
               clients.map((client, index) => (
                 <tr key={client.id || index}>
-                  <td>{index + 1}</td>
+                  
+                  {/* Row number */}
+                  <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
+
                   <td>
                     <div className="client-name-cell">
                       <span className="client-avatar">
-                        {(client.firstName?.[0] || "?") +
-                          (client.lastName?.[0] || "")}
+                        {(client.firstName?.[0] || "?") + (client.lastName?.[0] || "")}
                       </span>
                       <div>
                         <div className="fw-semibold">
                           {client.firstName} {client.lastName}
                         </div>
-                        <div className="small text-muted">
-                          ID: {client.id || "-"}
-                        </div>
+                        <div className="small text-muted">ID: {client.id}</div>
                       </div>
                     </div>
                   </td>
+
                   <td>{client.nationalId || "-"}</td>
+
                   <td>
                     <span className="badge rounded-pill bg-light text-dark client-job-badge">
-                      {client.job || "—"}
+                      {client.job || client.jobTitle || "—"}
                     </span>
                   </td>
+
                   <td className="text-end">
                     <button
                       className="btn btn-sm btn-outline-secondary me-2"
@@ -118,6 +120,7 @@ function ClientsTable({
                     >
                       Edit
                     </button>
+
                     <button
                       className="btn btn-sm btn-outline-danger"
                       onClick={() => onDeleteClick(client)}
@@ -125,6 +128,7 @@ function ClientsTable({
                       Delete
                     </button>
                   </td>
+
                 </tr>
               ))
             )}
@@ -137,6 +141,7 @@ function ClientsTable({
         <div className="text-muted small">
           Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
         </div>
+
         <div className="btn-group">
           <button
             className="btn btn-sm btn-outline-secondary"
@@ -144,6 +149,7 @@ function ClientsTable({
           >
             ‹ Prev
           </button>
+
           <button
             className="btn btn-sm btn-outline-secondary"
             onClick={() => handlePageChange(currentPage + 1)}
@@ -152,6 +158,7 @@ function ClientsTable({
           </button>
         </div>
       </div>
+
     </div>
   );
 }
