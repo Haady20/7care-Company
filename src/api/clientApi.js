@@ -1,11 +1,20 @@
 // src/api/clientApi.js
 
-// 👇 API base URL is loaded from .env file (REACT_APP_API_BASE_URL)
-// Default fallback is http://localhost if not set
-const API_BASE_URL =
-  process.env.REACT_APP_API_BASE_URL ;
+// 👇 Decide API base URL
+// 1. Use REACT_APP_API_BASE_URL if provided
+// 2. Otherwise fall back to "<current-origin>/api"
+const rawBase =
+  process.env.REACT_APP_API_BASE_URL ||
+  `${window.location.origin}/api`;
 
-const CLIENTS_BASE = `${API_BASE_URL}/api/clients`;
+// Strip trailing slashes to avoid "//clients"
+const API_BASE_URL = rawBase.replace(/\/+$/, "");
+
+// (Optional) debug logs – check in DevTools console once
+console.log("API_BASE_URL:", API_BASE_URL);
+
+const CLIENTS_BASE = `${API_BASE_URL}/clients`;
+console.log("CLIENTS_BASE:", CLIENTS_BASE);
 
 // All URLs in one place
 export const clientApiUrls = {
@@ -46,7 +55,10 @@ async function handleResponse(response) {
 // ---- Paginated list call ----
 
 export async function listClients({ page = 1, pageSize = 20 } = {}) {
-  const qs = new URLSearchParams({ page: String(page), pageSize: String(pageSize) });
+  const qs = new URLSearchParams({
+    page: String(page),
+    pageSize: String(pageSize),
+  });
   const res = await fetch(`${clientApiUrls.listClients}?${qs.toString()}`);
   return handleResponse(res);
 }
@@ -56,22 +68,19 @@ export async function listClients({ page = 1, pageSize = 20 } = {}) {
 export async function fetchClients() {
   const res = await fetch(clientApiUrls.listClients);
   const data = await handleResponse(res);
-  
-  // If the backend wraps clients in an object (e.g., { clients: [...] }),
-  // extract the array. Otherwise return data as-is if it's already an array.
+
   if (Array.isArray(data)) {
     return data;
   }
-  
+
   if (data && Array.isArray(data.clients)) {
     return data.clients;
   }
-  
+
   if (data && Array.isArray(data.data)) {
     return data.data;
   }
-  
-  // Fallback: return empty array if response is not in expected format
+
   console.warn("fetchClients: Unexpected response format", data);
   return [];
 }
@@ -87,9 +96,8 @@ export async function createClient(payload) {
   // Append primitives
   for (const [k, v] of Object.entries(payload)) {
     if (v === undefined || v === null) continue;
-    // If it's a File, append as-is; otherwise append string/primitive
-    if (k === 'image' && v instanceof File) {
-      fd.append('image', v);
+    if (k === "image" && v instanceof File) {
+      fd.append("image", v);
     } else {
       fd.append(k, String(v));
     }
@@ -97,7 +105,7 @@ export async function createClient(payload) {
 
   const res = await fetch(clientApiUrls.createClient, {
     method: "POST",
-    body: fd,                    // DO NOT set Content-Type; browser will set multipart boundary
+    body: fd, // browser sets multipart boundary
   });
   return handleResponse(res);
 }
