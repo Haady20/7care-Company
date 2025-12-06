@@ -1,47 +1,45 @@
+// src/api/clientApi.js
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+const API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:3002/api";
+
+export const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: { "Content-Type": "application/json" },
 });
 
-export async function listClients({ page, pageSize }) {
-  const res = await api.get("/clients", {
-    params: { page, pageSize },
-  });
-
-  const clients = res.data.clients || [];
-  const total = res.data.total || clients.length;
-  const totalPages = Math.ceil(total / pageSize);
-
-  return {
-    data: clients,
-    totalPages,
-  };
+// ------- LIST (paged) -------
+export async function listClients({ page = 1, pageSize = 20 } = {}) {
+  const res = await api.get("/clients", { params: { page, pageSize } });
+  // Expected shape:
+  // {
+  //   data: [...],
+  //   page: 1,
+  //   pageSize: 20,
+  //   total: 5,
+  //   totalPages: 1
+  // }
+  return res.data;
 }
 
-
-export function getClientById(id) {
-  return api.get(`/clients/${id}`);
+// If you have a client-by-token route on the backend, adjust the path:
+export async function getClientByQrToken(qrToken) {
+  // Example: /clients/qr/:qrToken  (rename if your backend differs)
+  const res = await api.get(`/clients/qr/${encodeURIComponent(qrToken)}`);
+  return res.data;
 }
 
-export function getClientByQrToken(qrToken) {
-  return api.get(`/clients/by-qr/${qrToken}`);
+// ------- MUTATIONS (optional) -------
+export function createClient(payload) {
+  return api.post("/clients", payload);
 }
 
-export function getClientQrPng(qrToken) {
-  return api.get(`/clients/${qrToken}/qr.png`, {
-    responseType: "blob",
-  });
-}
-
-export function createClient(data) {
-  return api.post("/clients", data);
-}
-
-export function updateClient(id, data) {
-  return api.put(`/clients/${id}`, data);
+export function updateClient(id, payload) {
+  return api.put(`/clients/${id}`, payload);
 }
 
 export function deleteClient(id) {
   return api.delete(`/clients/${id}`);
 }
+// Add other API functions as needed (e.g., search, filter)

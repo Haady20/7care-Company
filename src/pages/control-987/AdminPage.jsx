@@ -1,279 +1,205 @@
-import { useState, useMemo, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ClientsTable from "../../components/ClientsTable";
-import ClientActionsPanel from "../../components/ClientActionsPanel";
-
-import {
-  listClients,
-  createClient,
-  updateClient,
-  deleteClient,
-} from "../../api/clientApi";
-
+import { listClients, deleteClient, createClient } from "../../api/clientApi";
 import "../../styles/admin.css";
 
 const JOBS = ["All", "Doctor", "Engineer", "Accountant"];
 const ITEMS_PER_PAGE = 20;
 
-function mapApiClientToUi(apiClient) {
-  return {
-    ...apiClient,
-    job: apiClient.job || apiClient.jobTitle || "",
-  };
-}
-
 function AdminPage() {
   const [clients, setClients] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [jobFilter, setJobFilter] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [currentAction, setCurrentAction] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [jobFilter, setJobFilter] = useState("All");
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [quickFirst, setQuickFirst] = useState("");
+  const [quickLast, setQuickLast] = useState("");
+  const [quickClientName, setQuickClientName] = useState("");
+  const [creating, setCreating] = useState(false);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // ------------------ FETCH CLIENTS ------------------
-  useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const result = await listClients({
-          page: currentPage,
-          pageSize: ITEMS_PER_PAGE,
-        });
-
-        if (!cancelled) {
-          setClients(result.data.map(mapApiClientToUi));
-          setTotalPages(result.totalPages || 1);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.message || "Failed to load clients");
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
+  const load = async (p = 1) => {
+    setLoading(true);
+    try {
+      const data = await listClients({ page: p, pageSize: ITEMS_PER_PAGE });
+      setClients(Array.isArray(data.data) ? data.data : []);
+      setPage(data.page ?? p);
+      setTotalPages(data.totalPages ?? 1);
+    } catch (e) {
+      console.error("Failed to fetch clients:", e);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    load();
+  useEffect(() => {
+    load(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    return () => {
-      cancelled = true;
-    };
-  }, [currentPage]);
-
-  // ------------------ LOCAL FILTERING ------------------
-  const filteredClients = useMemo(() => {
-    return clients.filter((client) => {
-      const fullName = `${client.firstName || ""} ${
-        client.lastName || ""
-      }`.toLowerCase();
-
-      const matchesName = fullName.includes(searchTerm.toLowerCase());
-      const matchesJob = jobFilter === "All" ? true : client.job === jobFilter;
-
-      return matchesName && matchesJob;
+  const displayed = useMemo(() => {
+    // Client-side search + filter over the *current page* results
+    const term = searchTerm.trim().toLowerCase();
+    return clients.filter((c) => {
+      const fullName = `${c.firstName ?? ""} ${c.lastName ?? ""} ${c.clientName ?? ""}`.toLowerCase();
+      const jobOk = jobFilter === "All" || (c.jobTitle ?? "").toLowerCase() === jobFilter.toLowerCase();
+      const termOk =
+        !term ||
+        fullName.includes(term) ||
+        (c.nationalId ?? "").toString().includes(term) ||
+        (c.organization ?? "").toLowerCase().includes(term);
+      return jobOk && termOk;
     });
   }, [clients, searchTerm, jobFilter]);
 
-  // ------------------ ACTION HANDLERS ------------------
-  const handleSearchChange = (value) => {
-    setSearchTerm(value);
-    setCurrentPage(1);
+  const handleConfirmDelete = async (id) => {
+    await deleteClient(id);
+    // If this was the last item on the last page, you might want to shift page back:
+    await load(Math.min(page, totalPages));
   };
 
-  const handleJobFilterChange = (value) => {
-    setJobFilter(value);
-    setCurrentPage(1);
-  };
-
-  const handleAddClick = () => {
-    setCurrentAction("add");
-    setSelectedClient(null);
-  };
-
-  const handleEditClick = (client) => {
-    setSelectedClient(client);
-    setCurrentAction("edit");
-  };
-
-  const handleDeleteClick = (client) => {
-    setSelectedClient(client);
-    setCurrentAction("delete");
-  };
-
-  // ----------- ADD CLIENT (REAL API) -----------
-  const handleAddClient = async (newClientData) => {
-    try {
-      const res = await createClient(newClientData);
-      const added = mapApiClientToUi(res.data.client);
-
-      setClients((prev) => [...prev, added]);
-      setCurrentAction(null);
-      setSelectedClient(null);
-    } catch (err) {
-      alert("Failed to add client: " + err.message);
+  const handlePageChange = async (next) => {
+    if (next >= 1 && next <= totalPages) {
+      await load(next);
     }
   };
 
-  // ----------- UPDATE CLIENT (REAL API) -----------
-  const handleUpdateClient = async (clientData) => {
+  const handleQuickCreate = async () => {
+    if (creating) return;
+    const payload = {
+      firstName: quickFirst.trim() || undefined,
+      lastName: quickLast.trim() || undefined,
+      clientName: quickClientName.trim() || undefined,
+    };
+
+    // Require at least one name field
+    if (!payload.firstName && !payload.lastName && !payload.clientName) return;
+
+    setCreating(true);
     try {
-      const res = await updateClient(clientData.id, clientData);
-      const updated = mapApiClientToUi(res.data);
-
-      setClients((prev) =>
-        prev.map((c) => (c.id === clientData.id ? updated : c))
-      );
-
-      setCurrentAction(null);
-      setSelectedClient(null);
+      await createClient(payload);
+      // Optionally you could inspect returned data; here we just reload
+      await load(page);
+      // reset quick add
+      setQuickFirst("");
+      setQuickLast("");
+      setQuickClientName("");
+      setShowQuickAdd(false);
     } catch (err) {
-      alert("Failed to update client: " + err.message);
+      console.error("Quick create failed:", err);
+      // In a richer UI we would surface an error toast; keeping simple for now
+    } finally {
+      setCreating(false);
     }
   };
 
-  // ----------- DELETE CLIENT (REAL API) -----------
-  const handleConfirmDelete = async (clientId) => {
-    try {
-      await deleteClient(clientId);
-
-      setClients((prev) => prev.filter((c) => c.id !== clientId));
-
-      setCurrentAction(null);
-      setSelectedClient(null);
-    } catch (err) {
-      alert("Failed to delete: " + err.message);
-    }
-  };
-
-  const handleCancelAction = () => {
-    setCurrentAction(null);
-    setSelectedClient(null);
-  };
-
-  // ------------------ LOADING UI ------------------
-  if (loading) {
-    return (
-      <div className="admin-layout">
-        <aside className="admin-sidebar">
-          <div className="admin-logo">
-            <span className="logo-7">7</span>
-            <span className="logo-text">care</span>
-          </div>
-        </aside>
-        <main className="admin-main">
-          <header className="admin-header-skeleton" />
-          <div className="admin-loading">Loading clients...</div>
-        </main>
-      </div>
-    );
-  }
-
-  // ------------------ ERROR UI ------------------
-  if (error) {
-    return (
-      <div className="admin-layout">
-        <aside className="admin-sidebar">
-          <div className="admin-logo">
-            <span className="logo-7">7</span>
-            <span className="logo-text">care</span>
-          </div>
-        </aside>
-        <main className="admin-main">
-          <header className="admin-header card-shadow">
-            <div>
-              <h1 className="admin-title">Admin Dashboard</h1>
-              <p className="admin-subtitle">Manage your clients</p>
-            </div>
-          </header>
-          <div className="alert alert-danger mt-4">Error: {error}</div>
-        </main>
-      </div>
-    );
-  }
-
-  // ------------------ MAIN UI ------------------
   return (
-    <div className="admin-layout">
-      {/* Sidebar */}
-      <aside className="admin-sidebar">
-        <div className="admin-logo">
-          <span className="logo-7">7</span>
-          <span className="logo-text">care</span>
-        </div>
-
-        <nav className="admin-nav">
-          <button className="admin-nav-item active">Clients</button>
-        </nav>
-
-        <div className="admin-sidebar-footer">
-          <p className="mb-0 small text-muted">
-            Logged in as <strong>Admin</strong>
-          </p>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <main className="admin-main">
-        {/* Header */}
-        <header className="admin-header card-shadow">
-          <div>
-            <h1 className="admin-title">Clients Overview</h1>
-            <p className="admin-subtitle">
-              Search, filter and manage all 7care clients from one place.
-            </p>
-          </div>
-
-          <div className="admin-header-stats">
-            <div className="stat-card">
-              <span className="stat-label">Total Clients</span>
-              <span className="stat-value">{clients.length}</span>
-            </div>
-            <div className="stat-card">
-              <span className="stat-label">Filtered</span>
-              <span className="stat-value">{filteredClients.length}</span>
-            </div>
-          </div>
-        </header>
-
-        {/* Table */}
-        <section className="admin-content">
-          <div className="admin-card card-shadow">
-            <ClientsTable
-              clients={filteredClients}
-              jobs={JOBS}
-              searchTerm={searchTerm}
-              onSearchChange={handleSearchChange}
-              jobFilter={jobFilter}
-              onJobFilterChange={handleJobFilterChange}
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-              onAddClick={handleAddClick}
-              onEditClick={handleEditClick}
-              onDeleteClick={handleDeleteClick}
-            />
-          </div>
-
-          {/* Action Panel (Add / Edit / Delete) */}
-          <ClientActionsPanel
-            action={currentAction}
-            client={selectedClient}
-            jobs={JOBS}
-            onAddClient={handleAddClient}
-            onUpdateClient={handleUpdateClient}
-            onConfirmDelete={handleConfirmDelete}
-            onCancel={handleCancelAction}
+    <div className="container py-4">
+      <header className="d-flex align-items-center justify-content-between mb-3">
+        <h1 className="h4 m-0">Clients</h1>
+        <div className="d-flex gap-2">
+          <input
+            className="form-control"
+            placeholder="Search by name, ID, or org..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ width: 280 }}
           />
-        </section>
-      </main>
+          <select
+            className="form-select"
+            value={jobFilter}
+            onChange={(e) => setJobFilter(e.target.value)}
+            style={{ width: 160 }}
+          >
+            {JOBS.map((j) => (
+              <option key={j} value={j}>
+                {j}
+              </option>
+            ))}
+          </select>
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowQuickAdd((s) => !s)}
+          >
+            {showQuickAdd ? "Close" : "+ Add Client"}
+          </button>
+        </div>
+      </header>
+
+      {showQuickAdd && (
+        <div className="card mb-3">
+          <div className="card-body">
+            <div className="row g-2 align-items-center">
+              <div className="col-md-4">
+                <input
+                  className="form-control"
+                  placeholder="Client name (optional)"
+                  value={quickClientName}
+                  onChange={(e) => setQuickClientName(e.target.value)}
+                />
+              </div>
+              <div className="col-md-3">
+                <input
+                  className="form-control"
+                  placeholder="First name"
+                  value={quickFirst}
+                  onChange={(e) => setQuickFirst(e.target.value)}
+                />
+              </div>
+              <div className="col-md-3">
+                <input
+                  className="form-control"
+                  placeholder="Last name"
+                  value={quickLast}
+                  onChange={(e) => setQuickLast(e.target.value)}
+                />
+              </div>
+              <div className="col-md-2 d-flex gap-2">
+                <button
+                  className="btn btn-gold"
+                  disabled={creating || (!quickClientName && !quickFirst && !quickLast)}
+                  onClick={handleQuickCreate}
+                >
+                  {creating ? "Creating..." : "Create"}
+                </button>
+                <button
+                  className="btn btn-outline-secondary"
+                  onClick={() => {
+                    setQuickFirst("");
+                    setQuickLast("");
+                    setQuickClientName("");
+                    setShowQuickAdd(false);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {loading ? (
+        <div className="text-center py-5">Loading…</div>
+      ) : (
+        <ClientsTable
+          clients={displayed}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          jobFilter={jobFilter}
+          onJobFilterChange={setJobFilter}
+          currentPage={page}
+          totalPages={totalPages}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={handlePageChange}
+          onEditClick={(client) => {/* open your edit form with client */}}
+          onDeleteClick={(client) => handleConfirmDelete(client.id)}
+        />
+      )}
+
+      {/* Modal-based creation removed in favor of inline quick-add. */}
     </div>
   );
 }

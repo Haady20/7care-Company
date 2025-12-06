@@ -1,6 +1,66 @@
+import { useMemo } from "react";
+
+function formatDate(iso, locale = "en-GB") {
+  try {
+    return new Date(iso).toLocaleString(locale, {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+      timeZone: "Africa/Cairo",
+    });
+  } catch {
+    return "-";
+  }
+}
+
+const fallbackAvatar =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="#ddd"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666">N/A</text></svg>`
+  );
+
+function Avatar({ src, alt }) {
+  return (
+    <img
+      src={src || fallbackAvatar}
+      onError={(e) => {
+        e.currentTarget.src = fallbackAvatar;
+      }}
+      alt={alt}
+      width={40}
+      height={40}
+      loading="lazy"
+      style={{ objectFit: "cover", borderRadius: 8, background: "#f1f1f1" }}
+    />
+  );
+}
+
+function ServiceBadges({ one, two, three }) {
+  const items = [
+    { label: "S1", active: !!one },
+    { label: "S2", active: !!two },
+    { label: "S3", active: !!three },
+  ];
+  return (
+    <div className="d-flex gap-1">
+      {items.map((i, idx) => (
+        <span
+          key={idx}
+          className={`badge ${i.active ? "bg-success" : "bg-secondary"}`}
+          title={i.active ? "Enabled" : "Disabled"}
+        >
+          {i.label}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function ClientsTable({
   clients,
-  jobs,
   searchTerm,
   onSearchChange,
   jobFilter,
@@ -13,159 +73,109 @@ function ClientsTable({
   onEditClick,
   onDeleteClick,
 }) {
-  const handleSearchInput = (e) => {
-    onSearchChange(e.target.value);
-  };
+  const rows = useMemo(() => clients ?? [], [clients]);
 
-  const handleJobChange = (e) => {
-    onJobFilterChange(e.target.value);
-  };
-
-  const handlePageChange = (page) => {
-    if (page < 1 || page > totalPages) return;
-    onPageChange(page);
-  };
+  const canPrev = currentPage > 1;
+  const canNext = currentPage < totalPages;
 
   return (
-    <div className="clients-wrapper">
-      
-      {/* Toolbar */}
-      <div className="clients-toolbar">
-        
-        <div className="clients-search-group">
-          <label className="form-label mb-1 small text-muted">Search by name</label>
-          <input
-            type="text"
-            className="form-control clients-search-input"
-            placeholder="Type client name..."
-            value={searchTerm}
-            onChange={handleSearchInput}
-          />
-        </div>
-
-        <div className="clients-filter-group">
-          <label className="form-label mb-1 small text-muted">Filter by job</label>
-          <select
-            className="form-select clients-filter-select"
-            value={jobFilter}
-            onChange={handleJobChange}
-          >
-            {jobs.map((job) => (
-              <option key={job} value={job}>{job}</option>
-            ))}
-          </select>
-        </div>
-
-        <div className="clients-add-group">
-          <button className="btn btn-gold" onClick={onAddClick}>
-            + Add Client
-          </button>
-        </div>
-
-      </div>
-
-      {/* Table */}
-      <div className="table-responsive clients-table-container">
-        <table className="table table-hover align-middle mb-0 clients-table">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Full Name</th>
-              <th>National ID</th>
-              <th>Job</th>
-              <th className="text-end">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {clients.length === 0 ? (
+    <div className="card">
+      <div className="card-body p-0">
+        <div className="table-responsive">
+          <table className="table table-hover align-middle mb-0">
+            <thead className="table-light">
               <tr>
-                <td colSpan="5" className="text-center text-muted py-4">
-                  No clients found.
-                </td>
+                <th style={{ width: 56 }}></th>
+                <th>Name</th>
+                <th>Job Title</th>
+                <th>National ID</th>
+                <th>Registered</th>
+                <th>Services</th>
+                <th style={{ width: 140 }}>Actions</th>
               </tr>
-            ) : (
-              clients.map((client, index) => (
-                <tr key={client.id || index}>
-                  
-                  {/* Row number */}
-                  <td>{(currentPage - 1) * itemsPerPage + index + 1}</td>
-
-                  <td>
-                    <div className="client-name-cell">
-                      <span className="client-avatar">
-                        {(client.firstName?.[0] || "?") + (client.lastName?.[0] || "")}
-                      </span>
-                      <div>
-                        <div className="fw-semibold">
-                          {client.firstName} {client.lastName}
-                        </div>
-                        <div className="small text-muted">ID: {client.id}</div>
-                      </div>
-                    </div>
+            </thead>
+            <tbody>
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-5">
+                    No clients found.
                   </td>
-
-                  <td>{client.nationalId || "-"}</td>
-
-                  <td>
-                    <span className="badge rounded-pill bg-light text-dark client-job-badge">
-                      {client.job || client.jobTitle || "—"}
-                    </span>
-                  </td>
-
-      <td className="text-end">
-                    
-        <button
-          className="btn btn-sm btn-outline-secondary me-2"
-          onClick={() => onEditClick(client)}
-        >
-          Edit
-        </button>
-                    
-        <button
-          className="btn btn-sm btn-outline-info me-2"
-        >
-          Get QR Code
-        </button>
-                    
-        <button
-          className="btn btn-sm btn-outline-danger"
-          onClick={() => onDeleteClick(client)}
-        >
-          Delete
-        </button>
-                    
-      </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="clients-pagination">
-        <div className="text-muted small">
-          Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+              ) : (
+                rows.map((c) => {
+                  const fullName =
+                    c.clientName ||
+                    `${c.firstName ?? ""} ${c.lastName ?? ""}`.trim();
+                  return (
+                    <tr key={c.id}>
+                      <td>
+                        <Avatar src={c.image} alt={fullName} />
+                      </td>
+                      <td>
+                        <div className="fw-semibold">{fullName || "-"}</div>
+                        {c.organization && (
+                          <div className="text-muted small">{c.organization}</div>
+                        )}
+                      </td>
+                      <td>{c.jobTitle ?? "-"}</td>
+                      <td style={{ wordBreak: "break-all" }}>{c.nationalId ?? "-"}</td>
+                      <td>{c.registrationDate ? formatDate(c.registrationDate) : "-"}</td>
+                      <td>
+                        <ServiceBadges
+                          one={c.serviceOne}
+                          two={c.serviceTwo}
+                          three={c.serviceThree}
+                        />
+                      </td>
+                      <td>
+                        <div className="d-flex gap-2">
+                          <button
+                            className="btn btn-sm btn-outline-primary"
+                            onClick={() => onEditClick?.(c)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() => onDeleteClick?.(c)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
         </div>
 
-        <div className="btn-group">
-          <button
-            className="btn btn-sm btn-outline-secondary"
-            onClick={() => handlePageChange(currentPage - 1)}
-          >
-            ‹ Prev
-          </button>
-
-          <button
-            className="btn btn-sm btn-outline-secondary"
-            onClick={() => handlePageChange(currentPage + 1)}
-          >
-            Next ›
-          </button>
+        <div className="d-flex justify-content-between align-items-center px-3 py-2 border-top">
+          <div className="text-muted small">
+            Showing up to <strong>{itemsPerPage}</strong> per page
+          </div>
+          <div className="d-flex align-items-center gap-2">
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              disabled={!canPrev}
+              onClick={() => onPageChange(currentPage - 1)}
+            >
+              ‹ Prev
+            </button>
+            <span className="small">
+              Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+            </span>
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              disabled={!canNext}
+              onClick={() => onPageChange(currentPage + 1)}
+            >
+              Next ›
+            </button>
+          </div>
         </div>
       </div>
-
     </div>
   );
 }

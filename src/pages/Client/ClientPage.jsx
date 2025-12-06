@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import "./ClientPage.css";
 import About from "../../components/About.jsx";
 import Footer from "../../components/Footer.jsx";
+import { getClientByQrToken } from "../../api/clientApi";
 
 function ClientPage() {
   const { qrToken } = useParams(); // ← مهم جداً
@@ -13,8 +14,6 @@ function ClientPage() {
   const [error, setError] = useState(null);
 
   const [headerOpacity, setHeaderOpacity] = useState(1);
-
-  const API_BASE = process.env.REACT_APP_API_URL;
 
   // Header scroll opacity
   useEffect(() => {
@@ -32,12 +31,9 @@ function ClientPage() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`${API_BASE}/clients/by-qr/${qrToken}`);
-
-        if (!res.ok) throw new Error("Client not found");
-
-        const data = await res.json();
-        setClient(data.client);
+        const data = await getClientByQrToken(qrToken);
+        // Handle both wrapped and unwrapped responses
+        setClient(data.client || data);
       } catch (err) {
         setError("Client not found");
       } finally {
@@ -46,7 +42,7 @@ function ClientPage() {
     }
 
     load();
-  }, [qrToken, API_BASE]);
+  }, [qrToken]);
 
   if (loading) return <div className="loading">Loading...</div>;
   if (error || !client) return <div className="loading">Client Not Found</div>;
