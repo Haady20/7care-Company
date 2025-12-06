@@ -7,7 +7,7 @@ function ClientsTable({
   onJobFilterChange,
   currentPage,
   totalPages,
-  itemsPerPage,  // ✅ مهم للحساب الصحيح
+  itemsPerPage,
   onPageChange,
   onAddClick,
   onEditClick,
@@ -113,22 +113,29 @@ function ClientsTable({
                     </span>
                   </td>
 
-                  <td className="text-end">
-                    <button
-                      className="btn btn-sm btn-outline-secondary me-2"
-                      onClick={() => onEditClick(client)}
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      className="btn btn-sm btn-outline-danger"
-                      onClick={() => onDeleteClick(client)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-
+      <td className="text-end">
+                    
+        <button
+          className="btn btn-sm btn-outline-secondary me-2"
+          onClick={() => onEditClick(client)}
+        >
+          Edit
+        </button>
+                    
+        <button
+          className="btn btn-sm btn-outline-info me-2"
+        >
+          Get QR Code
+        </button>
+                    
+        <button
+          className="btn btn-sm btn-outline-danger"
+          onClick={() => onDeleteClick(client)}
+        >
+          Delete
+        </button>
+                    
+      </td>
                 </tr>
               ))
             )}
