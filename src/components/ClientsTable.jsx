@@ -75,6 +75,33 @@ function ClientsTable({
 }) {
   const rows = useMemo(() => clients ?? [], [clients]);
 
+  const handleNameClick = async (clientId) => {
+    try {
+      const baseURL = process.env.REACT_APP_API_BASE_URL || "http://localhost:3002/api";
+      const qrUrl = `${baseURL}/clients/${clientId}/qr.pdf`;
+      
+      // Fetch the QR code PDF
+      const response = await fetch(qrUrl);
+      if (!response.ok) {
+        throw new Error(`Failed to download QR code: ${response.statusText}`);
+      }
+      
+      // Create a blob and trigger download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `qr-code-${clientId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading QR code:", error);
+      alert("Failed to download QR code. Please try again.");
+    }
+  };
+
   const canPrev = currentPage > 1;
   const canNext = currentPage < totalPages;
 
@@ -112,7 +139,29 @@ function ClientsTable({
                         <Avatar src={c.image} alt={fullName} />
                       </td>
                       <td>
-                        <div className="fw-semibold">{fullName || "-"}</div>
+                        <div className="fw-semibold">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleNameClick(c.id);
+                            }}
+                            style={{
+                              background: "none",
+                              border: "none",
+                              color: "inherit",
+                              textDecoration: "none",
+                              cursor: "pointer",
+                              transition: "color 0.2s",
+                              padding: 0,
+                              font: "inherit",
+                            }}
+                            onMouseEnter={(e) => (e.target.style.color = "#0d6efd")}
+                            onMouseLeave={(e) => (e.target.style.color = "inherit")}
+                            title="Click to download QR code"
+                          >
+                            {fullName || "-"}
+                          </button>
+                        </div>
                         {c.organization && (
                           <div className="text-muted small">{c.organization}</div>
                         )}
