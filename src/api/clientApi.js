@@ -32,11 +32,14 @@ export async function getClientByQrToken(qrToken) {
 
 // ------- MUTATIONS (optional) -------
 export function createClient(payload) {
-  return api.post("/clients", payload);
+  // If payload is FormData, let axios set multipart/form-data
+  const config = payload instanceof FormData ? { headers: {} } : {};
+  return api.post("/clients", payload, config);
 }
 
 export function updateClient(id, payload) {
-  return api.put(`/clients/${id}`, payload);
+  const config = payload instanceof FormData ? { headers: {} } : {};
+  return api.put(`/clients/${id}`, payload, config);
 }
 
 export function deleteClient(id) {

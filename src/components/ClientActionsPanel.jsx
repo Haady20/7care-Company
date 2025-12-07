@@ -12,15 +12,10 @@ function ClientActionsPanel({
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    job: "",
     nationalId: "",
     address: "",
-    googleMapLocation: "",
-    complaintsAndSuggestions: "",
+    image: "",
     expiryDate: "2026-12-31",
-    serviceOne: false,
-    serviceTwo: false,
-    serviceThree: false,
   });
 
   useEffect(() => {
@@ -28,60 +23,59 @@ function ClientActionsPanel({
       setFormData({
         firstName: client.firstName || "",
         lastName: client.lastName || "",
-        job: client.job || client.jobTitle || "",
         nationalId: client.nationalId || "",
         address: client.address || "",
-        googleMapLocation: client.googleMapLocation || "",
-        complaintsAndSuggestions: client.complaintsAndSuggestions || "",
+        image: client.image || "",
         expiryDate: client.expiryDate?.slice(0, 10) || "2026-12-31",
-        serviceOne: client.serviceOne ?? false,
-        serviceTwo: client.serviceTwo ?? false,
-        serviceThree: client.serviceThree ?? false,
       });
     } else if (action === "add") {
       setFormData({
         firstName: "",
         lastName: "",
-        job: "",
         nationalId: "",
         address: "",
-        googleMapLocation: "",
-        complaintsAndSuggestions: "",
+        image: "",
         expiryDate: "2026-12-31",
-
-        serviceOne: false,
-        serviceTwo: false,
-        serviceThree: false,
       });
     }
   }, [action, client]);
 
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked, files } = e.target;
 
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    if (type === "file" && files && files[0]) {
+      // For file input, read as base64 or store the file
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({
+          ...prev,
+          [name]: reader.result, // base64 string
+        }));
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    }
   };
+  
+  const toIsoStartOfDay = (d) => (d ? new Date(`${d}T00:00:00.000Z`).toISOString() : null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Send exactly what the backend example expects
     const payload = {
-      clientName: `${formData.firstName} ${formData.lastName}`.trim(),
       firstName: formData.firstName,
       lastName: formData.lastName,
       nationalId: formData.nationalId,
-      jobTitle: formData.job,
       address: formData.address,
-      googleMapLocation: formData.googleMapLocation,
-      complaintsAndSuggestions: formData.complaintsAndSuggestions,
-      expiryDate: formData.expiryDate,
-      serviceOne: formData.serviceOne,
-      serviceTwo: formData.serviceTwo,
-      serviceThree: formData.serviceThree,
+      image: formData.image,
+      expiryDate: toIsoStartOfDay(formData.expiryDate),
     };
 
     if (action === "add") onAddClient(payload);
@@ -144,15 +138,16 @@ function ClientActionsPanel({
                 value={formData.nationalId} onChange={handleChange} required />
             </div>
 
-            <div className="col-md-6">
-              <label className="form-label">Job</label>
-              <select name="job" className="form-select"
-                value={formData.job} onChange={handleChange} required >
-                <option value="">Select Job</option>
-                {jobs.filter(j => j !== "All").map(job =>
-                  <option key={job} value={job}>{job}</option>
-                )}
-              </select>
+            <div className="col-md-12">
+              <label className="form-label">Profile Image</label>
+              <input type="file" name="image" className="form-control"
+                accept="image/*"
+                onChange={handleChange} />
+              {formData.image && (
+                <div className="mt-2">
+                  <img src={formData.image} alt="Preview" style={{ height: 80, borderRadius: 4 }} />
+                </div>
+              )}
             </div>
 
             <div className="col-md-12">
@@ -161,48 +156,10 @@ function ClientActionsPanel({
                 value={formData.address} onChange={handleChange} />
             </div>
 
-            <div className="col-md-12">
-              <label className="form-label">Google Map URL</label>
-              <input name="googleMapLocation" className="form-control"
-                value={formData.googleMapLocation} onChange={handleChange} />
-            </div>
-
-            <div className="col-md-12">
-              <label className="form-label">Complaints / Suggestions</label>
-              <textarea name="complaintsAndSuggestions" className="form-control"
-                value={formData.complaintsAndSuggestions} onChange={handleChange} />
-            </div>
-
             <div className="col-md-6">
               <label className="form-label">Expiry Date</label>
               <input type="date" name="expiryDate" className="form-control"
                 value={formData.expiryDate} onChange={handleChange} required />
-            </div>
-
-            {/* Service Toggles */}
-            <div className="col-md-12">
-              <label className="form-label d-block">Services</label>
-
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input"
-                  name="serviceOne" checked={formData.serviceOne}
-                  onChange={handleChange} />
-                <label className="form-check-label">Service One</label>
-              </div>
-
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input"
-                  name="serviceTwo" checked={formData.serviceTwo}
-                  onChange={handleChange} />
-                <label className="form-check-label">Service Two</label>
-              </div>
-
-              <div className="form-check">
-                <input type="checkbox" className="form-check-input"
-                  name="serviceThree" checked={formData.serviceThree}
-                  onChange={handleChange} />
-                <label className="form-check-label">Service Three</label>
-              </div>
             </div>
 
           </div>

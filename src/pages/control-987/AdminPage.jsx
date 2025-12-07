@@ -1,32 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ClientsTable from "../../components/ClientsTable";
-import { listClients, deleteClient } from "../../api/clientApi";
+import ClientActionsPanel from "../../components/ClientActionsPanel";
+import { listClients, deleteClient, createClient } from "../../api/clientApi";
 import "../../styles/admin.css";
 
 const JOBS = ["All", "Doctor", "Engineer", "Accountant"];
 const ITEMS_PER_PAGE = 20;
 
-const SAMPLE = {
-  clientName: "Acme weCorp",
-  logo: "https://exampl2e.com/logo.png",
-  image: "https://exam2ple.com/photo.png",
-  firstName: "2John",
-  lastName: "Do2e",
-  nationalId: "12345672823139",
-  jobTitle: "Manager",
-  organization: "A2cme Corp",
-  serviceOne: true,
-  serviceTwo: false,
-  serviceThree: true,
-  expiryDate: "2026-12-31",
-  address: "123 2Main St",
-  googleMapLocation: "https://maps.google.com/?q=123+Main+St",
-  complaintsAndSuggestions: "Call support hotline",
-};
-
 function AdminPage() {
-  const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -34,7 +15,11 @@ function AdminPage() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [jobFilter, setJobFilter] = useState("All");
-  // Quick-add removed in favor of full form route
+  // inline create
+  const [showCreate, setShowCreate] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [created, setCreated] = useState(null); // server response (client, profileUrl, qrImage)
+  const [error, setError] = useState(null);
 
   const load = async (p = 1) => {
     setLoading(true);
@@ -82,8 +67,21 @@ function AdminPage() {
     }
   };
 
-  // navigate to client form with a SAMPLE prefill
-  const goToFormPrefilled = () => navigate("/clients/new", { state: { prefill: SAMPLE } });
+  const handleQuickAdd = async (payload) => {
+    try {
+      setError(null);
+      setCreating(true);
+      const { data } = await createClient(payload); // POST /clients
+      setCreated(data); // { client, profileUrl, qrImage }
+      await load(1);
+      setShowCreate(false);
+    } catch (e) {
+      console.error(e);
+      setError(e?.response?.data?.message || "Failed to create client");
+    } finally {
+      setCreating(false);
+    }
+  };
 
   return (
     <div className="container py-4">
@@ -109,12 +107,40 @@ function AdminPage() {
               </option>
             ))}
           </select>
-          <button className="btn btn-primary" onClick={goToFormPrefilled}>
-            + Add Client
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowCreate(v => !v)}
+            disabled={creating}
+          >
+            {showCreate ? "Close" : "+ Add Client"}
           </button>
         </div>
       </header>
-      {/* Quick-add removed; Add Client now opens full form at /clients/new */}
+
+      {error && <div className="alert alert-danger">{error}</div>}
+      {created && (
+        <div className="alert alert-success d-flex flex-column gap-2">
+          <div>Client created: <strong>{created?.client?.firstName} {created?.client?.lastName}</strong></div>
+          {created?.profileUrl && (
+            <div>Profile: <a href={created.profileUrl} target="_blank" rel="noreferrer">{created.profileUrl}</a></div>
+          )}
+          {created?.qrImage && (
+            <div><img src={created.qrImage} alt="QR" style={{ height: 120 }} /></div>
+          )}
+          <div><button className="btn btn-outline-secondary btn-sm" onClick={() => setCreated(null)}>Dismiss</button></div>
+        </div>
+      )}
+
+      {showCreate && (
+        <div className="mb-3">
+          <ClientActionsPanel
+            action="add"
+            jobs={JOBS}
+            onAddClient={handleQuickAdd}
+            onCancel={() => setShowCreate(false)}
+          />
+        </div>
+      )}
 
       {loading ? (
         <div className="text-center py-5">Loading…</div>
