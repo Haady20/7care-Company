@@ -18,7 +18,7 @@ html::before {
   background: rgba(110, 60, 60, 0.062);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  pointer-events: none; /* عشان ما يمنعش الضغط */
+  pointer-events: none;
 }
 
 body {
