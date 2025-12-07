@@ -17,7 +17,7 @@ function formatDate(iso, locale = "en-GB") {
 }
 
 const fallbackAvatar =
-  'data:image/svg+xml;utf8,' +
+  "data:image/svg+xml;utf8," +
   encodeURIComponent(
     `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="100%" height="100%" fill="#ddd"/><text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="14" fill="#666">N/A</text></svg>`
   );
@@ -77,15 +77,16 @@ function ClientsTable({
 
   const handleNameClick = async (clientId) => {
     try {
-      const baseURL = process.env.REACT_APP_API_BASE_URL || "http://localhost:3002/api";
+      const baseURL =
+        process.env.REACT_APP_API_BASE_URL || "http://localhost:3002/api";
       const qrUrl = `${baseURL}/clients/${clientId}/qr.pdf`;
-      
+
       // Fetch the QR code PDF
       const response = await fetch(qrUrl);
       if (!response.ok) {
         throw new Error(`Failed to download QR code: ${response.statusText}`);
       }
-      
+
       // Create a blob and trigger download
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -114,7 +115,7 @@ function ClientsTable({
               <tr>
                 <th style={{ width: 56 }}></th>
                 <th>Name</th>
-                <th>Job Title</th>
+                {/* Job Title column removed */}
                 <th>National ID</th>
                 <th>Registered</th>
                 <th>Services</th>
@@ -124,7 +125,8 @@ function ClientsTable({
             <tbody>
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center py-5">
+                  {/* colSpan updated from 7 to 6 after removing Job Title */}
+                  <td colSpan="6" className="text-center py-5">
                     No clients found.
                   </td>
                 </tr>
@@ -155,20 +157,32 @@ function ClientsTable({
                               padding: 0,
                               font: "inherit",
                             }}
-                            onMouseEnter={(e) => (e.target.style.color = "#0d6efd")}
-                            onMouseLeave={(e) => (e.target.style.color = "inherit")}
+                            onMouseEnter={(e) =>
+                              (e.target.style.color = "#0d6efd")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.target.style.color = "inherit")
+                            }
                             title="Click to download QR code"
                           >
                             {fullName || "-"}
                           </button>
                         </div>
                         {c.organization && (
-                          <div className="text-muted small">{c.organization}</div>
+                          <div className="text-muted small">
+                            {c.organization}
+                          </div>
                         )}
                       </td>
-                      <td>{c.jobTitle ?? "-"}</td>
-                      <td style={{ wordBreak: "break-all" }}>{c.nationalId ?? "-"}</td>
-                      <td>{c.registrationDate ? formatDate(c.registrationDate) : "-"}</td>
+                      {/* Job Title cell removed */}
+                      <td style={{ wordBreak: "break-all" }}>
+                        {c.nationalId ?? "-"}
+                      </td>
+                      <td>
+                        {c.registrationDate
+                          ? formatDate(c.registrationDate)
+                          : "-"}
+                      </td>
                       <td>
                         <ServiceBadges
                           one={c.serviceOne}
@@ -213,7 +227,8 @@ function ClientsTable({
               ‹ Prev
             </button>
             <span className="small">
-              Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
+              Page <strong>{currentPage}</strong> of{" "}
+              <strong>{totalPages}</strong>
             </span>
             <button
               className="btn btn-sm btn-outline-secondary"
