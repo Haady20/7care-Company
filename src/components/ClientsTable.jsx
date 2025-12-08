@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { apiFetch } from "../api/client";
 
 function formatDate(iso, locale = "en-GB") {
   try {
@@ -80,8 +81,8 @@ function ClientsTable({
       const baseURL = process.env.REACT_APP_API_BASE_URL || "http://localhost:3002/api";
       const qrUrl = `${baseURL}/clients/${clientId}/qr.pdf`;
       
-      // Fetch the QR code PDF
-      const response = await fetch(qrUrl);
+      // Fetch the QR code PDF with token
+      const response = await apiFetch(qrUrl);
       if (!response.ok) {
         throw new Error(`Failed to download QR code: ${response.statusText}`);
       }

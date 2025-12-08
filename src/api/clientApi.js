@@ -4,9 +4,22 @@ import axios from "axios";
 const API_BASE_URL =
   process.env.REACT_APP_API_BASE_URL || "http://localhost:3002/api";
 
+const LS_TOKEN_KEY = "auth.token";
+
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: { "Content-Type": "application/json" },
+});
+
+// Attach token to every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem(LS_TOKEN_KEY);
+  if (token) {
+    // make sure headers exists
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 // ------- LIST (paged) -------
