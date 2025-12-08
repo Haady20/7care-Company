@@ -58,28 +58,30 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener('storage', onStorage);
   }, []);
 
-  async function login(email, password) {
-    const r = await fetch('http://localhost:3000/api/auth/login', {
+ const AUTH_API_BASE_URL =
+  process.env.REACT_APP_API_BASE_URL || 'http://localhost:3002/api';
 
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+async function login(email, password) {
+  const r = await fetch(`${AUTH_API_BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
 
-    if (!r.ok) throw new Error('Invalid email or password');
+  if (!r.ok) throw new Error('Invalid email or password');
 
-    const data = await r.json();
-    const t = data?.token;
-    const u = data?.user || null;
-    if (!t) throw new Error('No token in response');
+  const data = await r.json();
+  const t = data?.token;
+  const u = data?.user || null;
+  if (!t) throw new Error('No token in response');
 
-    const e = getTokenExp(t);
-    if (!e) throw new Error('Token missing exp');
+  const e = getTokenExp(t);
+  if (!e) throw new Error('Token missing exp');
 
-    localStorage.setItem(LS_TOKEN_KEY, t);
-    localStorage.setItem(LS_USER_KEY, JSON.stringify(u));
-    setAuth({ token: t, user: u, exp: e, isAuthed: true });
-  }
+  localStorage.setItem(LS_TOKEN_KEY, t);
+  localStorage.setItem(LS_USER_KEY, JSON.stringify(u));
+  setAuth({ token: t, user: u, exp: e, isAuthed: true });
+}
 
   function logout() {
     localStorage.removeItem(LS_TOKEN_KEY);
