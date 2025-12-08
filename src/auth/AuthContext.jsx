@@ -59,11 +59,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   async function login(email, password) {
-<<<<<<< HEAD
     const r = await fetch('http://localhost:3000/api/auth/login', {
-=======
-    const r = await fetch('http://localhost:3002/api/auth/login', {
->>>>>>> e358e1aa16128d625cfe0ead105dd741127f3d66
+
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ email, password }),
