@@ -79,11 +79,8 @@ function ClientsTable({
   const handleNameClick = async (clientId) => {
     try {
       const baseURL =
-<<<<<<< HEAD
         process.env.REACT_APP_API_BASE_URL || "http://localhost:3000/api";
-=======
-        process.env.REACT_APP_API_BASE_URL || "http://localhost:3002/api";
->>>>>>> e358e1aa16128d625cfe0ead105dd741127f3d66
+
       const qrUrl = `${baseURL}/clients/${clientId}/qr.pdf`;
 
       // Fetch the QR code PDF with token
