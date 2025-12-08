@@ -12,6 +12,8 @@ function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  // NEW: total number of clients
+  const [total, setTotal] = useState(0);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [jobFilter, setJobFilter] = useState("All");
@@ -28,6 +30,8 @@ function AdminPage() {
       setClients(Array.isArray(data.data) ? data.data : []);
       setPage(data.page ?? p);
       setTotalPages(data.totalPages ?? 1);
+      // NEW: save the full count from the API
+      setTotal(data.total ?? 0);
     } catch (e) {
       console.error("Failed to fetch clients:", e);
     } finally {
@@ -145,19 +149,27 @@ function AdminPage() {
       {loading ? (
         <div className="text-center py-5">Loading…</div>
       ) : (
-        <ClientsTable
-          clients={displayed}
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          jobFilter={jobFilter}
-          onJobFilterChange={setJobFilter}
-          currentPage={page}
-          totalPages={totalPages}
-          itemsPerPage={ITEMS_PER_PAGE}
-          onPageChange={handlePageChange}
-          onEditClick={(client) => {/* open your edit form with client */}}
-          onDeleteClick={(client) => handleConfirmDelete(client.id)}
-        />
+        // NEW: show total clients badge
+        <>
+          <div className="mb-3 text-end">
+            <span className="badge bg-secondary">
+              Total clients: {total}
+            </span>
+          </div>
+          <ClientsTable
+            clients={displayed}
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            jobFilter={jobFilter}
+            onJobFilterChange={setJobFilter}
+            currentPage={page}
+            totalPages={totalPages}
+            itemsPerPage={ITEMS_PER_PAGE}
+            onPageChange={handlePageChange}
+            onEditClick={(client) => {/* open your edit form with client */}}
+            onDeleteClick={(client) => handleConfirmDelete(client.id)}
+          />
+        </>
       )}
 
       {/* Modal-based creation removed in favor of inline quick-add. */}
