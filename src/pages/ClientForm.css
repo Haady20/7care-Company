@@ -1,0 +1,156 @@
+/* src/pages/ClientForm.css */
+html { scroll-behavior: smooth; }
+
+.client-form-page {
+  direction: rtl;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+  max-width: 960px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: #1f2937;
+}
+
+.title {
+  margin: 0 0 16px;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  background: linear-gradient(135deg, #0bb4d4, #1b4f92);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Alerts */
+.alert {
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+}
+.alert.error {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #991b1b;
+}
+
+/* Success panel */
+.success-card {
+  background: #f0fff3;
+  border: 1px solid #bbf7d0;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+.success-card h2 { margin: 0 0 10px; }
+.success-card a { color: #1b4f92; font-weight: 700; }
+
+.qr-image {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px dashed #cbd5e1;
+  padding: 10px;
+}
+.actions { margin-top: 14px; }
+
+/* Form card */
+.client-form-card {
+  display: grid;
+  gap: 14px;
+  background: #ffffffc9;
+  border: 1px solid rgba(27,79,146,0.12);
+  backdrop-filter: blur(3px);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 12px 40px rgba(27,79,146,0.12);
+}
+
+/* Fields */
+.form-field { display: grid; gap: 6px; }
+.field-label { font-weight: 700; color: #0f172a; }
+
+/* Inputs / Textarea */
+.input, .textarea, select {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, transform .08s ease;
+  box-sizing: border-box;
+}
+.textarea { min-height: 110px; resize: vertical; }
+.input:focus, .textarea:focus, select:focus {
+  border-color: #1b4f92;
+  box-shadow: 0 0 0 4px rgba(11,180,212,0.15);
+  transform: translateY(-1px);
+}
+
+/* Image Preview */
+.image-preview-container {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.image-preview-container img {
+  max-width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #f9fafb;
+  padding: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #0bb4d4, #1b4f92);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(27,79,146,0.25);
+  transition: transform .1s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.btn:hover { transform: translateY(-2px); opacity: 0.95; }
+.btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.btn.ghost {
+  background: #fff;
+  color: #1b4f92;
+  border: 1px solid rgba(27,79,146,0.24);
+  box-shadow: none;
+}
+.btn.ghost:hover { background: #f1f5f9; }
+
+/* Optional row helper for checkboxes if you need it */
+.checkbox-row { display: flex; flex-wrap: wrap; gap: 12px; }
+input[type="checkbox"] { width: 18px; height: 18px; accent-color: #1b4f92; }
+
+/* Responsive */
+@media (min-width: 720px) {
+  .client-form-card {
+    grid-template-columns: 1fr 1fr;
+  }
+  /* Image Upload field spans full width */
+  .client-form-card .form-field:nth-child(3) { grid-column: 1 / -1; }
+  /* last few items (e.g., textarea & actions) span full width */
+  .form-field:nth-last-child(-n+3) { grid-column: 1 / -1; }
+  .actions { grid-column: 1 / -1; }
+}
