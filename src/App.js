@@ -1,28 +1,40 @@
 // App.js
-import { Routes, Route } from "react-router-dom";
-import ClientPage from "./pages/Client/ClientPage";
-import LandingPage from "./pages/Landing/LandingPage";
-import AdminPage from "./pages/control-987/AdminPage";
-import ClientForm from "./pages/ClientForm";
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import ClientPage from './pages/Client/ClientPage';
+import LandingPage from './pages/Landing/LandingPage';
+import ClientForm from './pages/ClientForm';
+import { AuthProvider } from './auth/AuthContext';
+import PrivateRoute from './auth/PrivateRoute';
+import Login from './pages/Login';
+import AdminPage from './pages/control-987/AdminPage';
 
 function App() {
   return (
-    <Routes>
-      {/* Root route */}
-      <Route path="/" element={<LandingPage />} />
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<Login />} />
 
-      {/* Optional alias if you still want /landing */}
-      <Route path="/landing" element={<LandingPage />} />
+        {/* Root route */}
+        <Route path="/" element={<LandingPage />} />
 
-      {/* Client page with qrToken param */}
-      <Route path="/client/:qrToken" element={<ClientPage />} />
+        {/* Optional alias if you still want /landing */}
+        <Route path="/landing" element={<LandingPage />} />
 
-  {/* Admin page */}
-  <Route path="/control-987" element={<AdminPage />} />
+        {/* Client page with qrToken param */}
+        <Route path="/client/:qrToken" element={<ClientPage />} />
 
-  {/* Client form (new) */}
-  <Route path="/clients/new" element={<ClientForm />} />
-    </Routes>
+        {/* Protected block */}
+        <Route element={<PrivateRoute />}>
+          <Route path="/control-987" element={<AdminPage />} />
+        </Route>
+
+        {/* Client form (new) */}
+        <Route path="/clients/new" element={<ClientForm />} />
+
+        <Route path="*" element={<div style={{ padding: 24 }}>Home</div>} />
+      </Routes>
+    </AuthProvider>
   );
 }
 
