@@ -1,4 +1,4 @@
-
+/* 
 html {
   height: 100vh;
   background-image: url(../../public/images/logo.png);
@@ -7,15 +7,15 @@ html {
   background-position: bottom left;
   background-color: #ffc75bf5;
   position: relative;
-}
+} */
 
-body {
+/* body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   margin: 0;
   padding: 0;
   color: #222;
   direction: ltr;
-}
+} */
 .container {
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(10px);
