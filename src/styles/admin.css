@@ -1,3 +1,4 @@
+
 html {
   height: 100vh;
   background-image: url(../../public/images/logo.png);
@@ -40,7 +41,6 @@ header {
   
 }
 
-
 input.form-control,
 select.form-select {
   border-radius: 10px !important;
@@ -56,7 +56,6 @@ select.form-select:focus {
   border-color: #222;
   box-shadow: 0 0 0 0.15rem rgba(0,0,0,0.15);
 }
-
 
 .btn-primary {
   background-color: #222 !important;
@@ -75,6 +74,7 @@ select.form-select:focus {
 .btn-outline-secondary {
   border-radius: 10px !important;
 }
+
 
 .alert {
   border-radius: 14px;
@@ -100,7 +100,6 @@ select.form-select:focus {
   font-size: 0.9rem;
   border-radius: 12px;
 }
-
 
 table {
   border-radius: 14px;

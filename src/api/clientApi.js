@@ -2,7 +2,11 @@
 import axios from "axios";
 
 const API_BASE_URL =
+<<<<<<< HEAD
   process.env.REACT_APP_API_BASE_URL || "http://localhost:3000/api";
+=======
+  process.env.REACT_APP_API_BASE_URL || "http://localhost:3002/api";
+>>>>>>> e358e1aa16128d625cfe0ead105dd741127f3d66
 
 const LS_TOKEN_KEY = "auth.token";
 
