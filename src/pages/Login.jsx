@@ -8,8 +8,8 @@ export default function Login() {
   const next = sp.get('next') || '/control-987';
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [email, setEmail] = useState('admin@example.com');
-  const [password, setPassword] = useState('Admin123!');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [err, setErr] = useState(null);
   const [busy, setBusy] = useState(false);
 

@@ -16,6 +16,34 @@ html {
   color: #222;
   direction: ltr;
 } */
+
+.login-page-center {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+h5,
+.form-label{
+  color: white;
+}
+.login-page-center::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("../assets/header-bg.png") center/cover no-repeat;
+  background-size: cover;
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  /* filter: blur(8px); */
+  transform: scale(1.05);
+  z-index: -2;
+  animation: fadeBg 3s ease-out forwards;
+}
+
 .container {
   /* background: rgba(255, 255, 255, 0.55); */
   backdrop-filter: blur(10px);

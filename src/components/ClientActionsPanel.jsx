@@ -65,22 +65,22 @@ function ClientActionsPanel({
   
   const toIsoStartOfDay = (d) => (d ? new Date(`${d}T00:00:00.000Z`).toISOString() : null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    // Send exactly what the backend example expects
-    const payload = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      nationalId: formData.nationalId,
-      address: formData.address,
-      image: formData.image,
-      expiryDate: toIsoStartOfDay(formData.expiryDate),
-    };
+  try {
+    if (action === "add") {
+      await onAddClient(formData);
+    } 
+    else if (action === "edit") {
+      await onUpdateClient(client.id, formData);
+    }
+  } catch (err) {
+    console.error("SAVE ERROR:", err);
+    alert("Error saving client");
+  }
+};
 
-    if (action === "add") onAddClient(payload);
-    else if (action === "edit") onUpdateClient({ ...client, ...payload });
-  };
 
   if (!action) return null;
 
