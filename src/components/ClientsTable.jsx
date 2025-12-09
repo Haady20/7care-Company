@@ -78,13 +78,11 @@ function ClientsTable({
 
   const handleNameClick = async (clientId) => {
     try {
-      const baseURL =
-        process.env.REACT_APP_API_BASE_URL || "http://localhost:3000/api";
-
-      const qrUrl = `${baseURL}/clients/${clientId}/qr.pdf`;
+      // Use relative path for apiFetch (it will prepend the API_BASE_URL)
+      const qrPath = `/clients/${clientId}/qr.pdf`;
 
       // Fetch the QR code PDF with token
-      const response = await apiFetch(qrUrl);
+      const response = await apiFetch(qrPath);
 
       if (!response.ok) {
         throw new Error(`Failed to download QR code: ${response.statusText}`);
