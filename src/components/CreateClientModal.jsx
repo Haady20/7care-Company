@@ -62,7 +62,9 @@ export default function CreateClientModal({ show, onClose, onCreated }) {
       onCreated?.(data.client); // refresh list
     } catch (err) {
       console.error(err);
-      setError("Failed to create client. Please check fields and try again.");
+      // Show backend error message if available, otherwise generic message
+      const errorMessage = err?.response?.data?.message || err?.message || "Failed to create client. Please check fields and try again.";
+      setError(errorMessage);
     } finally {
       setSubmitting(false);
     }
