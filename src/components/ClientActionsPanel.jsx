@@ -14,6 +14,7 @@ function ClientActionsPanel({
     lastName: "",
     nationalId: "",
     address: "",
+    job: "",
     image: "",
     expiryDate: "2026-12-31",
   });
@@ -25,6 +26,7 @@ function ClientActionsPanel({
         lastName: client.lastName || "",
         nationalId: client.nationalId || "",
         address: client.address || "",
+        job: client.job || "",
         image: client.image || "",
         expiryDate: client.expiryDate?.slice(0, 10) || "2026-12-31",
       });
@@ -34,6 +36,7 @@ function ClientActionsPanel({
         lastName: "",
         nationalId: "",
         address: "",
+        job: "",
         image: "",
         expiryDate: "2026-12-31",
       });
@@ -154,6 +157,12 @@ const handleSubmit = async (e) => {
               <label className="form-label">Address</label>
               <input name="address" className="form-control"
                 value={formData.address} onChange={handleChange} />
+            </div>
+
+            <div className="col-md-6">
+              <label className="form-label">Job</label>
+              <input name="job" className="form-control"
+                value={formData.job} onChange={handleChange} />
             </div>
 
             <div className="col-md-6">

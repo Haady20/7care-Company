@@ -59,7 +59,7 @@ function ClientPage() {
 
         <div className="hero-content">
           <h2 className="hero-name">
-            <span className="text-dark">{client.jobTitle}/ </span>
+            <span className="text-dark">{client.job || client.jobTitle || ""}{client.job || client.jobTitle ? "/ " : ""}</span>
             {fullName}
           </h2>
         </div>
@@ -124,7 +124,7 @@ function ClientPage() {
 
           <div className="info-item border-purple">
             <span className="info-label">الوظيفة</span>
-            <span className="info-value">{client.jobTitle}</span>
+            <span className="info-value">{client.job || client.jobTitle || "—"}</span>
           </div>
 
           <div className="info-item border-red">
