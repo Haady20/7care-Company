@@ -5,11 +5,11 @@ import {
   listClients,
   deleteClient,
   createClient,
-  updateClient
+  updateClient,
 } from "../../api/clientApi";
 
 import { useAuth } from "../../auth/AuthContext";
-import { useNavigate } from "react-router-dom";   
+import { useNavigate } from "react-router-dom";
 
 import "../../styles/admin.css";
 
@@ -72,7 +72,9 @@ function AdminPage() {
     const term = searchTerm.trim().toLowerCase();
 
     return clients.filter((c) => {
-      const fullName = `${c.firstName ?? ""} ${c.lastName ?? ""} ${c.clientName ?? ""}`.toLowerCase();
+      const fullName = `${c.firstName ?? ""} ${c.lastName ?? ""} ${
+        c.clientName ?? ""
+      }`.toLowerCase();
 
       const jobOk =
         jobFilter === "All" ||
@@ -151,29 +153,27 @@ function AdminPage() {
     setSelectedClient(null);
     setCurrentAction(null);
   };
-  
+
   return (
     <div className="login-page-center">
       <div className="container py-4">
-
         <header className="d-flex align-items-center justify-content-between mb-3">
           <h1 className="h4 m-0">Clients</h1>
 
           <div className="d-flex gap-2">
-
             <input
               className="form-control"
               placeholder="Search by name, ID, or org..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ width: 280 }}
+              style={{ width: 280 }} // on desktop; overridden on mobile by CSS
             />
 
             <select
               className="form-select"
               value={jobFilter}
               onChange={(e) => setJobFilter(e.target.value)}
-              style={{ width: 160 }}
+              style={{ width: 160 }} // on desktop; overridden on mobile by CSS
             >
               {JOBS.map((j) => (
                 <option key={j} value={j}>
